@@ -1,7 +1,7 @@
 {
   "name": "dat-verb",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.1.0",
+  "description": "experimental dat cli client",
   "main": "index.js",
   "bin": {
     "dat-verb": "cli.js"
