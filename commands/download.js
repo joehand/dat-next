@@ -1,8 +1,6 @@
 var logger = require('status-logger')
 var prettyBytes = require('pretty-bytes')
-var initArchive = require('../lib/initArchive')
-var createNetwork = require('../lib/network')
-var initStats = require('../lib/stats')
+var createDat = require('../lib')
 var ui = require('../ui')
 
 module.exports = function (opts) {
@@ -26,15 +24,16 @@ module.exports = function (opts) {
     log.print()
   }, opts.logspeed)
 
-  initArchive(dir, {resume: resume, key: key}, function (err, archive, db) {
+  createDat(dir, {resume: resume, key: key}, function (err, dat) {
     if (err) return exit(err)
+    var archive = dat.archive
 
     // General Archive Info
     progressOutput[0] = `Cloning Dat Archive: ${dir}`
     progressOutput.push(ui.link(archive) + '\n')
 
     // Stats (used for network + download)
-    stats = initStats(archive, db)
+    stats = dat.stats()
     stats.on('update:blocksProgress', function () {
       checkDone()
     })
@@ -42,7 +41,7 @@ module.exports = function (opts) {
     progressOutput.push('')
 
     // Network
-    network = createNetwork(archive, opts)
+    network = dat.network(opts)
     network.swarm.once('connection', function (peer) {
       connected = true
       progressOutput[2] = 'Starting Download...'

@@ -1,9 +1,6 @@
 var logger = require('status-logger')
 var prettyBytes = require('pretty-bytes')
-var initArchive = require('../lib/initArchive')
-var importFiles = require('../lib/importFiles')
-var createNetwork = require('../lib/network')
-var initStats = require('../lib/stats')
+var createDat = require('../lib')
 var ui = require('../ui')
 
 module.exports = function (opts) {
@@ -28,18 +25,19 @@ module.exports = function (opts) {
     log.print()
   }, opts.logspeed)
 
-  initArchive(dir, {resume: true}, function (err, archive, db) {
+  createDat(dir, {resume: true}, function (err, dat) {
     if (err) return exit(err)
+    var archive = dat.archive
 
     // General Archive Info
     progressOutput[0] = `Syncing Dat Archive: ${dir}`
     progressOutput.push(ui.link(archive) + '\n')
 
     // Stats (used for network + download)
-    stats = initStats(archive, db)
+    stats = dat.stats()
 
     // Network
-    network = createNetwork(archive, opts)
+    network = dat.network(opts)
     netOutput.push('Waiting for Dat Network connections...')
 
     if (!archive.owner) {
@@ -59,7 +57,7 @@ module.exports = function (opts) {
       progressOutput.push('')
 
       // TODO: allow live: true
-      importStatus = importFiles(archive, dir, {live: false, resume: true}, function (err) {
+      importStatus = dat.importFiles({live: false, resume: true}, function (err) {
         if (err) return exit(err)
         importDone = true
         progressOutput[2] = 'Archive update finished! Sharing latest files.'

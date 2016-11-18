@@ -1,7 +1,6 @@
 var logger = require('status-logger')
 var prettyBytes = require('pretty-bytes')
-var importFiles = require('../lib/importFiles')
-var initArchive = require('../lib/initArchive')
+var createDat = require('../lib')
 var ui = require('../ui')
 
 module.exports = function (opts) {
@@ -17,8 +16,9 @@ module.exports = function (opts) {
     log.print()
   }, opts.logspeed)
 
-  initArchive(dir, {resume: false}, function (err, archive) {
+  createDat(dir, {resume: false}, function (err, dat) {
     if (err) return exit(err)
+    var archive = dat.archive
 
     output[0] = `Dat Archive initialized: ${opts.dir}`
     output.push(ui.link(archive))
@@ -27,7 +27,7 @@ module.exports = function (opts) {
     output.push('')
     output.push('Importing files to archive...')
 
-    importStatus = importFiles(archive, dir, {live: false, resume: false}, function (err) {
+    importStatus = dat.importFiles({live: false, resume: false}, function (err) {
       if (err) return exit(err)
       output[3] = 'File import finished!'
       output.push(`Total Size: ${importStatus.fileCount} ${importStatus.fileCount === 1 ? 'file' : 'files'} (${prettyBytes(importStatus.totalSize)})`)
