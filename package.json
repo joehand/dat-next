@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/joehand/dat-verb#readme",
   "dependencies": {
-    "dat-node": "^1.0.0-alpha.1.1",
+    "dat-node": "^1.0.0-alpha.1.2.3",
     "pretty-bytes": "^4.0.2",
     "progress-string": "^1.2.1",
     "status-logger": "^3.0.0",
