@@ -29,10 +29,10 @@ Clone a remote Dat Archive to a local folder. Will create a folder with the key 
 
 
 ```
-dat-verb update [--dir=<folder>]
+dat-verb pull [--dir=<folder>]
 ```
 
-Update local Dat Archive to latest files and exit.
+Update a cloned Dat Archive to latest files and exit.
 
 ```
 dat-verb sync [--dir=<folder>]

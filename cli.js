@@ -21,8 +21,8 @@ var commands = [
     ]
   },
   {
-    name: 'update',
-    command: require('./commands/update')
+    name: 'pull',
+    command: require('./commands/pull')
   },
   {
     name: 'start',
@@ -65,7 +65,7 @@ function none () {
   console.error('   dat create                        create a local dat')
   console.error('   dat sync                          sync updated files for a local dat or update a remote dat')
   console.error('   dat clone <dat-link> <directory>  clone a remote dat')
-  console.error('   dat update                        download updates from a remote dat and exits')
+  console.error('   dat pull                          download updated files from a remote dat and exit')
   console.error('')
   console.error('    --dir=<folder>   set directory for all commands')
   process.exit(1)
