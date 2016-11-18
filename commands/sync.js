@@ -1,6 +1,6 @@
 var logger = require('status-logger')
 var prettyBytes = require('pretty-bytes')
-var createDat = require('../lib')
+var createDat = require('dat-node')
 var ui = require('../ui')
 
 module.exports = function (opts) {
