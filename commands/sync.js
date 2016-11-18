@@ -1,109 +1,87 @@
 var logger = require('status-logger')
 var prettyBytes = require('pretty-bytes')
-var initArchive = require('../lib/initArchive')
-var importFiles = require('../lib/importFiles')
-var createNetwork = require('../lib/network')
-var initStats = require('../lib/stats')
+var Dat = require('dat-node')
 var ui = require('../ui')
 
 module.exports = function (opts) {
-  var dir = opts.dir
-  var bar = ui.bar()
-  var connected = false
-  var downloader = false
+  // Set default options (some of these may be exposed to CLI eventually)
+  opts.resume = true // sync must always be a resumed archive
+  opts.exit = false
+
+  // **** NOTES ****
+  // download sync action is in lib/download
+  // TODO: move share sync to separate file
+  // ****************
+
   var importDone = false
   var importStatus = null
   var network = null
   var stats = null
 
-  var output = [['Starting Dat...'], []]
+  // Logging Init
+  var output = [
+    [
+      'Starting Dat...', // Shows Folder Name
+      '', // Shows Link
+      '', // Shows Importing Progress Bar
+      '', // Shows Total Size Info
+      '' //  spacer before network info
+    ],
+    [] // Shows network information
+  ]
+  var progressOutput = output[0] // shortcut for progress output
   var log = logger(output, {debug: false, quiet: false})
-  var progressOutput = output[0]
-  var netOutput = output[1]
 
-  setInterval(function () {
-    if (stats && downloader) updateDownload()
+  // UI Elements
+  var importUI = ui.importProgress()
+  var exit = ui.exit(log)
+
+  var logInt = setInterval(function () {
     if (importStatus && !importDone) updateImport()
     if (network) updateNetwork()
     log.print()
   }, opts.logspeed)
 
-  initArchive(dir, {resume: true}, function (err, archive, db) {
+  Dat(opts.dir, opts, function (err, dat) {
     if (err) return exit(err)
+    if (!dat.archive.owner) {
+      // Downloading sync, move to lib/download
+      clearInterval(logInt)// TODO: Better way to deal with old logger?
+      output[0] = ''
+      return require('../lib/download')('sync', opts, dat)
+    }
+
+    var archive = dat.archive
 
     // General Archive Info
-    progressOutput[0] = `Syncing Dat Archive: ${dir}`
-    progressOutput.push(ui.link(archive) + '\n')
+    progressOutput[0] = `Syncing Dat Archive: ${dat.path}`
+    progressOutput[1] = ui.link(archive) + '\n'
 
     // Stats (used for network + download)
-    stats = initStats(archive, db)
+    stats = dat.stats()
 
     // Network
-    network = createNetwork(archive, opts)
-    netOutput.push('Waiting for Dat Network connections...')
-
-    if (!archive.owner) {
-      // TODO: Download syncing
-      downloader = true
-      progressOutput.push('Looking for Dat Archive in Network')
-      progressOutput.push('')
-      network.swarm.once('connection', function (peer) {
-        connected = true
-        progressOutput[2] = 'Starting Download...'
-      })
-    }
+    network = dat.network(opts)
 
     if (archive.owner && opts.import) {
       // File Imports
-      progressOutput.push('Importing new & updated files to archive...')
-      progressOutput.push('')
+      progressOutput[2] = 'Importing new & updated files to archive...'
 
       // TODO: allow live: true
-      importStatus = importFiles(archive, dir, {live: false, resume: true}, function (err) {
+      importStatus = dat.importFiles({live: false, resume: true}, function (err) {
         if (err) return exit(err)
         importDone = true
         progressOutput[2] = 'Archive update finished! Sharing latest files.'
         progressOutput[3] = `Total Size: ${importStatus.fileCount} ${importStatus.fileCount === 1 ? 'file' : 'files'} (${prettyBytes(importStatus.totalSize)})`
-        progressOutput.push('')
       })
     }
   })
 
-  function updateDownload () {
-    var st = stats.get()
-    if (!st.blocksTotal) {
-      progressOutput[2] = '... Fetching Metadata'
-      return
-    }
-    var completed = st.blocksProgress === st.blocksTotal
-    if (completed && connected) {
-      progressOutput[2] = 'Files updated to latest!'
-    } else if (completed) {
-      progressOutput[2] = 'Waiting for connection to get latest data.'
-    } else {
-      var progress = Math.round(st.blocksProgress * 100 / st.blocksTotal)
-      progressOutput[2] = bar(progress)
-    }
-
-    progressOutput[3] = `Total size: ${st.filesTotal} ${st.filesTotal === 1 ? 'file' : 'files'} (${prettyBytes(st.bytesTotal)})\n`
-  }
-
   function updateImport () {
-    var importedFiles = importStatus.fileCount - 1 // TODO: bug in importer?
-    var progress = Math.round(importedFiles * 100 / importStatus.countStats.files)
-    progressOutput[2] = bar(progress) + ' ' + importedFiles + ' files imported\n'
+    progressOutput[2] = importUI(importStatus)
   }
 
   function updateNetwork () {
-    netOutput = output[1] = ui.network(network.swarm.connections.length, stats.get())
-  }
-
-  function exit (err) {
-    if (err) {
-      console.error(err)
-      process.exit(1)
-    }
-    log.print()
-    process.exit(0)
+    output[1] = ui.network(network.peers(), stats.get())
   }
 }

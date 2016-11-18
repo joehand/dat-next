@@ -1,4 +1,6 @@
 module.exports = function (opts) {
+  // Force these options for pull command
   opts.resume = true
-  require('./download')(opts)
+  opts.exit = true
+  require('../lib/download')('pull', opts)
 }
