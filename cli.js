@@ -25,17 +25,6 @@ var commands = [
     command: require('./commands/pull')
   },
   {
-    name: 'start',
-    command: require('./commands/sync'),
-    options: [
-      {
-        name: 'import',
-        boolean: true,
-        default: true
-      }
-    ]
-  },
-  {
     name: 'sync',
     command: require('./commands/sync'),
     options: [
