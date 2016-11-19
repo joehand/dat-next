@@ -4,6 +4,10 @@ var Dat = require('dat-node')
 var ui = require('../ui')
 
 module.exports = function (opts) {
+  // Gets overwritten by logger.
+  // Logging starts after Dat cb for lib/download sync
+  process.stdout.write('Starting Dat...')
+
   // Set default options (some of these may be exposed to CLI eventually)
   opts.resume = true // sync must always be a resumed archive
   opts.exit = false
@@ -18,38 +22,38 @@ module.exports = function (opts) {
   var network = null
   var stats = null
 
-  // Logging Init
-  var output = [
-    [
-      'Starting Dat...', // Shows Folder Name
-      '', // Shows Link
-      '', // Shows Importing Progress Bar
-      '', // Shows Total Size Info
-      '' //  spacer before network info
-    ],
-    [] // Shows network information
-  ]
-  var progressOutput = output[0] // shortcut for progress output
-  var log = logger(output, {debug: false, quiet: false})
-
-  // UI Elements
-  var importUI = ui.importProgress()
-  var exit = ui.exit(log)
-
-  var logInt = setInterval(function () {
-    if (importStatus && !importDone) updateImport()
-    if (network) updateNetwork()
-    log.print()
-  }, opts.logspeed)
-
   Dat(opts.dir, opts, function (err, dat) {
-    if (err) return exit(err)
+    if (err) return ui.exitErr(err)
     if (!dat.archive.owner) {
       // Downloading sync, move to lib/download
-      clearInterval(logInt)// TODO: Better way to deal with old logger?
-      output[0] = ''
       return require('../lib/download')('sync', opts, dat)
     }
+
+    // Logging Init.
+    // After download require because downloader has it's own logger
+    var output = [
+      [
+        'Starting Dat...', // Shows Folder Name
+        '', // Shows Link
+        '', // Shows Importing Progress Bar
+        '', // Shows Total Size Info
+        '' //  spacer before network info
+      ],
+      [] // Shows network information
+    ]
+    var progressOutput = output[0] // shortcut for progress output
+    var log = logger(output, {debug: false, quiet: false})
+
+    // UI Elements
+    var importUI = ui.importProgress()
+    var exit = ui.exit(log)
+
+    // Printing Things!!
+    setInterval(function () {
+      if (importStatus && !importDone) updateImport()
+      if (network) updateNetwork()
+      log.print()
+    }, opts.logspeed)
 
     var archive = dat.archive
 
@@ -75,13 +79,13 @@ module.exports = function (opts) {
         progressOutput[3] = `Total Size: ${importStatus.fileCount} ${importStatus.fileCount === 1 ? 'file' : 'files'} (${prettyBytes(importStatus.totalSize)})`
       })
     }
+
+    function updateImport () {
+      progressOutput[2] = importUI(importStatus)
+    }
+
+    function updateNetwork () {
+      output[1] = ui.network(network.peers(), stats.get())
+    }
   })
-
-  function updateImport () {
-    progressOutput[2] = importUI(importStatus)
-  }
-
-  function updateNetwork () {
-    output[1] = ui.network(network.peers(), stats.get())
-  }
 }
