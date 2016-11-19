@@ -1,9 +1,9 @@
 var fs = require('fs')
-var exit = require('../ui/exit')
+var exit = require('../ui').exitErr
 
 module.exports = function (opts) {
   opts.key = opts._[0]
-  if (!opts.key) return exit()('key required to clone')
+  if (!opts.key) return exit('key required to clone')
 
   // Force these options for clone command
   opts.resume = false
