@@ -1,5 +1,6 @@
 var fs = require('fs')
 var exit = require('../ui').exitErr
+var download = require('../lib/download')
 
 module.exports = function (opts) {
   opts.key = opts._[0]
@@ -16,5 +17,5 @@ module.exports = function (opts) {
   try {
     fs.accessSync(opts.dir, fs.F_OK)
   } catch (e) { fs.mkdirSync(opts.dir) }
-  require('../lib/download')('clone', opts)
+  download('clone', opts)
 }

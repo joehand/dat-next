@@ -2,6 +2,7 @@ var logger = require('status-logger')
 var prettyBytes = require('pretty-bytes')
 var Dat = require('dat-node')
 var ui = require('../ui')
+var download = require('../lib/download')
 
 module.exports = function (opts) {
   // Gets overwritten by logger.
@@ -24,9 +25,9 @@ module.exports = function (opts) {
 
   Dat(opts.dir, opts, function (err, dat) {
     if (err) return ui.exitErr(err)
-    if (!dat.archive.owner) {
+    if (!dat.owner) {
       // Downloading sync, move to lib/download
-      return require('../lib/download')('sync', opts, dat)
+      return download('sync', opts, dat)
     }
 
     // Logging Init.
@@ -55,11 +56,9 @@ module.exports = function (opts) {
       log.print()
     }, opts.logspeed)
 
-    var archive = dat.archive
-
     // General Archive Info
     progressOutput[0] = `Syncing Dat Archive: ${dat.path}`
-    progressOutput[1] = ui.link(archive) + '\n'
+    progressOutput[1] = ui.link(dat.key) + '\n'
 
     // Stats (used for network + download)
     stats = dat.stats()
@@ -67,7 +66,7 @@ module.exports = function (opts) {
     // Network
     network = dat.network(opts)
 
-    if (archive.owner && opts.import) {
+    if (dat.owner && opts.import) {
       // File Imports
       progressOutput[2] = 'Importing new & updated files to archive...'
 

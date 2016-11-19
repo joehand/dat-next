@@ -1,4 +1,5 @@
+var encoding = require('dat-encoding')
 
-module.exports = function (archive) {
-  return `Link: ${archive.key.toString('hex')}`
+module.exports = function (key) {
+  return `Link: ${encoding.encode(key)}`
 }

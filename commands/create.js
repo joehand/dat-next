@@ -21,6 +21,7 @@ module.exports = function (opts) {
   var importUI = ui.importProgress()
   var exit = ui.exit(log)
 
+    // Printing Things!!
   setInterval(function () {
     if (importStatus) updateProgress()
     log.print()
@@ -28,28 +29,29 @@ module.exports = function (opts) {
 
   Dat(opts.dir, opts, function (err, dat) {
     if (err) return exit(err)
-    var archive = dat.archive
 
+    // General Archive Info
     output[0] = `Dat ${opts.live ? '' : 'Snapshot'} Archive initialized: ${dat.path}`
-    if (archive.key) output[1] = ui.link(archive) + '\n'
+    if (dat.key) output[1] = ui.link(dat.key) + '\n'
     else output[1] = 'Creating link...' + '\n'
+
+    // Not importing files. Just create .dat, print info, and exit.
     if (!opts.import) return exit()
 
     output[2] = 'Importing files to archive...'
+    importStatus = dat.importFiles(function (err) {
+      if (err) return exit(err)
+      output[2] = opts.live ? 'File import finished!' : 'Snapshot created!'
+      output[3] = `Total Size: ${importStatus.fileCount} ${importStatus.fileCount === 1 ? 'file' : 'files'} (${prettyBytes(importStatus.totalSize)})`
 
-    if (opts.import) {
-      importStatus = dat.importFiles(function (err) {
+      if (opts.live) return exit()
+      dat.archive.finalize(function (err) {
+        // snapshot needs to finalize to get link
         if (err) return exit(err)
-        output[2] = opts.live ? 'File import finished!' : 'Snapshot created!'
-        output[3] = `Total Size: ${importStatus.fileCount} ${importStatus.fileCount === 1 ? 'file' : 'files'} (${prettyBytes(importStatus.totalSize)})`
-        if (opts.live) return exit()
-        archive.finalize(function (err) {
-          if (err) return exit(err)
-          output[1] = ui.link(archive) + '\n'
-          exit()
-        })
+        output[1] = ui.link(dat.key) + '\n'
+        exit()
       })
-    }
+    })
   })
 
   function updateProgress () {
