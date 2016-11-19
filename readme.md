@@ -8,9 +8,12 @@ An experimental dat cli client!
 
 ```
 dat-verb create [--dir=<folder>] [--no-import]
+dat-verb snapshot [--dir=<folder>]
 ```
 
 Create a new Dat Archive in the current directory (or specify `--dir`). Will automatically import the files in that directory to the archive.
+
+Snapshot will create the archive in snapshot, `{live: false}` mode.
 
 ```
 dat-verb sync [--dir=<folder>] [--no-import]
