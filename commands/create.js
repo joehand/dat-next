@@ -30,17 +30,26 @@ module.exports = function (opts) {
     if (err) return exit(err)
     var archive = dat.archive
 
-    output[0] = `Dat Archive initialized: ${dat.path}`
-    output[1] = ui.link(archive) + '\n'
+    output[0] = `Dat ${opts.live ? '' : 'Snapshot'} Archive initialized: ${dat.path}`
+    if (archive.key) output[1] = ui.link(archive) + '\n'
+    else output[1] = 'Creating link...' + '\n'
     if (!opts.import) return exit()
 
     output[2] = 'Importing files to archive...'
-    importStatus = dat.importFiles({live: false, resume: false}, function (err) {
-      if (err) return exit(err)
-      output[2] = 'File import finished!'
-      output[3] = `Total Size: ${importStatus.fileCount} ${importStatus.fileCount === 1 ? 'file' : 'files'} (${prettyBytes(importStatus.totalSize)})`
-      exit()
-    })
+
+    if (opts.import) {
+      importStatus = dat.importFiles(function (err) {
+        if (err) return exit(err)
+        output[2] = opts.live ? 'File import finished!' : 'Snapshot created!'
+        output[3] = `Total Size: ${importStatus.fileCount} ${importStatus.fileCount === 1 ? 'file' : 'files'} (${prettyBytes(importStatus.totalSize)})`
+        if (opts.live) return exit()
+        archive.finalize(function (err) {
+          if (err) return exit(err)
+          output[1] = ui.link(archive) + '\n'
+          exit()
+        })
+      })
+    }
   })
 
   function updateProgress () {

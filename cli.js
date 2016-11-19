@@ -21,6 +21,10 @@ var commands = [
     ]
   },
   {
+    name: 'snapshot',
+    command: require('./commands/snapshot')
+  },
+  {
     name: 'pull',
     command: require('./commands/pull')
   },
@@ -52,6 +56,7 @@ match(process.argv.slice(2))
 function none () {
   console.error('Usage: dat-verb <cmd> [options]')
   console.error('   dat create                        create a local dat')
+  console.error('   dat snapshot                      create a local dat snapshot')
   console.error('   dat sync                          sync updated files for a local dat or update a remote dat')
   console.error('   dat clone <dat-link> <directory>  clone a remote dat')
   console.error('   dat pull                          download updated files from a remote dat and exit')
