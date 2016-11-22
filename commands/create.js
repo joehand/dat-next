@@ -31,7 +31,7 @@ module.exports = function (opts) {
     if (err) return exit(err)
 
     // General Archive Info
-    output[0] = `Dat ${opts.live ? '' : 'Snapshot'} Archive initialized: ${dat.path}`
+    output[0] = `Dat ${opts.live !== false ? '' : 'Snapshot'} Archive initialized: ${dat.path}`
     if (dat.key) output[1] = ui.link(dat.key) + '\n'
     else output[1] = 'Creating link...' + '\n'
 
@@ -41,10 +41,10 @@ module.exports = function (opts) {
     output[2] = 'Importing files to archive...'
     importStatus = dat.importFiles(function (err) {
       if (err) return exit(err)
-      output[2] = opts.live ? 'File import finished!' : 'Snapshot created!'
+      output[2] = opts.live !== false ? 'File import finished!' : 'Snapshot created!'
       output[3] = `Total Size: ${importStatus.fileCount} ${importStatus.fileCount === 1 ? 'file' : 'files'} (${prettyBytes(importStatus.totalSize)})`
 
-      if (opts.live) return exit()
+      if (opts.live !== false) return exit()
       dat.archive.finalize(function (err) {
         // snapshot needs to finalize to get link
         if (err) return exit(err)
