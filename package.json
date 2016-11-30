@@ -3,7 +3,7 @@
   "version": "0.3.2",
   "description": "experimental dat cli client",
   "bin": {
-    "dat-verb": "cli.js"
+    "dat-verb": "bin/cli.js"
   },
   "scripts": {
     "test": "standard"
