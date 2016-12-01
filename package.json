@@ -6,7 +6,7 @@
     "dat-verb": "bin/cli.js"
   },
   "scripts": {
-    "test": "standard"
+    "test": "standard && tape tests/*.js | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -24,5 +24,12 @@
     "progress-string": "^1.2.1",
     "status-logger": "^3.0.0",
     "subcommand": "^2.0.4"
+  },
+  "devDependencies": {
+    "recursive-readdir-sync": "^1.0.6",
+    "standard": "^8.6.0",
+    "tap-spec": "^4.1.1",
+    "tape": "^4.6.3",
+    "tape-spawn": "^1.4.2"
   }
 }
