@@ -86,7 +86,13 @@ test('pull - default opts', function (t) {
   })
 })
 
+test('close sharer', function (t) {
+  shareDat.close(function () {
+    rimraf.sync(path.join(shareDat.path, '.dat'))
+    t.end()
+  })
+})
+
 test.onFinish(function () {
   rimraf.sync(baseTestDir)
-  shareDat.close()
 })

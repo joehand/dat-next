@@ -24,7 +24,7 @@ function shareFixtures (opts, cb) {
     if (err) throw err
     dat.trackStats()
     dat.joinNetwork()
-    if (!opts.import) return cb(null, dat)
+    if (opts.import === false) return cb(null, dat)
     dat.importFiles(function (err) {
       if (err) throw err
       cb(null, dat)

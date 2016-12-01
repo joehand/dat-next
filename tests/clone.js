@@ -17,7 +17,6 @@ test('clone - default opts', function (t) {
     var st = spawn(t, cmd, {cwd: baseTestDir})
     var datDir = path.join(baseTestDir, key)
     st.stdout.match(function (output) {
-      console.log(output)
       var downloadFinished = output.indexOf('Download Finished') > -1
       if (!downloadFinished) return false
 
@@ -32,7 +31,6 @@ test('clone - default opts', function (t) {
       t.ok(help.isDir(datDir), 'creates download directory')
 
       var fileList = help.fileList(datDir).join(' ')
-      console.log(fileList)
       var hasCsvFile = fileList.indexOf('all_hour.csv') > -1
       t.ok(hasCsvFile, 'csv file downloaded')
       var hasDatFolder = fileList.indexOf('.dat') > -1
@@ -89,7 +87,13 @@ test('clone - specify dir', function (t) {
   st.end()
 })
 
+test('close sharer', function (t) {
+  shareDat.close(function () {
+    rimraf.sync(path.join(shareDat.path, '.dat'))
+    t.end()
+  })
+})
+
 test.onFinish(function () {
   rimraf.sync(baseTestDir)
-  shareDat.close()
 })
