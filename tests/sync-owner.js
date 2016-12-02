@@ -14,7 +14,7 @@ var downDat
 // os x adds this if you view the fixtures in finder and breaks the file count assertions
 try { fs.unlinkSync(path.join(fixtures, '.DS_Store')) } catch (e) { /* ignore error */ }
 
-test('sync - errors without create first', function (t) {
+test('sync-owner - errors without create first', function (t) {
   rimraf.sync(path.join(fixtures, '.dat'))
   // cmd: dat sync
   var cmd = dat + ' sync'
@@ -30,7 +30,7 @@ test('sync - errors without create first', function (t) {
   st.end()
 })
 
-test('sync - create a dat for syncing', function (t) {
+test('sync-owner - create a dat for syncing', function (t) {
   rimraf.sync(path.join(fixtures, '.dat'))
   // cmd: dat create
   var cmd = dat + ' create'
@@ -45,7 +45,7 @@ test('sync - create a dat for syncing', function (t) {
   st.end()
 })
 
-test('sync - default opts', function (t) {
+test('sync-owner - default opts', function (t) {
   // cmd: dat sync
   var cmd = dat + ' sync'
   var st = spawn(t, cmd, {cwd: fixtures, end: false})
@@ -77,37 +77,36 @@ test('sync - default opts', function (t) {
     mkdirp.sync(downloadDir)
 
     Dat(downloadDir, { key: key }, function (err, tmpDat) {
+      if (err) throw err
+
       downDat = tmpDat
       downDat.joinNetwork()
-      downDat.trackStats()
 
       downDat.network.swarm.once('connection', function () {
         t.pass('downloader connects')
-        st.kill()
-        t.end()
+        downDat.close(function () {
+          rimraf.sync(downDat.path)
+          t.end()
+        })
       })
     })
   }
 })
 
-test('close downlaoder', function (t) {
-  downDat.close(function () {
-    rimraf(downDat.path, function () {
-      t.end()
-    })
-  })
-})
-
-test('sync - create without import for syncing', function (t) {
+test('sync-owner - create without import for syncing', function (t) {
   rimraf.sync(path.join(fixtures, '.dat'))
   // cmd: dat create
   var cmd = dat + ' create --no-import'
   var st = spawn(t, cmd, {cwd: fixtures})
+  st.stdout.match(function (output) {
+    if (output.indexOf('Archive initialized') > -1) return true
+    return false
+  })
   st.succeeds()
   st.end()
 })
 
-test('sync - imports after no-import create', function (t) {
+test('sync-owner - imports after no-import create', function (t) {
   // cmd: dat sync
   var cmd = dat + ' sync'
   var st = spawn(t, cmd, {cwd: fixtures})
