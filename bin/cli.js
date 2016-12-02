@@ -16,7 +16,8 @@ var config = {
     require('../lib/commands/create'),
     require('../lib/commands/pull'),
     require('../lib/commands/snapshot'),
-    require('../lib/commands/sync')
+    require('../lib/commands/sync'),
+    require('../lib/commands/doctor')
   ]
 }
 

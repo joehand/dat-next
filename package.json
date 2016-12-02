@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/joehand/dat-verb#readme",
   "dependencies": {
+    "dat-doctor": "^1.0.1",
     "dat-key-as": "^1.0.0",
     "dat-node": "^1.0.0-alpha.2.1.0",
     "pretty-bytes": "^4.0.2",
