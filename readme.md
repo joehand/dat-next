@@ -1,4 +1,4 @@
-# dat-verb
+# dat-verb [![Travis](https://img.shields.io/travis/joehand/dat-verb.svg?style=flat-square)](https://travis-ci.org/joehand/dat-verb) [![npm](https://img.shields.io/npm/v/dat-verb.svg?style=flat-square)](https://npmjs.org/package/dat-verb)
 
 An experimental dat cli client!
 
