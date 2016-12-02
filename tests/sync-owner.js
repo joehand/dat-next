@@ -26,7 +26,6 @@ test('sync-owner - errors without create first', function (t) {
     st.kill()
     return true
   })
-  st.fails()
   st.end()
 })
 

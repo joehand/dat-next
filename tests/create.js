@@ -45,7 +45,6 @@ test('create - errors on existing archive', function (t) {
   var st = spawn(t, cmd, {cwd: fixtures})
 
   st.stdout.empty()
-  st.fails('exits with error')
   st.stderr.match(function (output) {
     t.ok(output.indexOf('cannot overwrite') > -1, 'cannot overwrite error')
     st.kill()
