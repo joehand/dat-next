@@ -12,7 +12,6 @@ var SERVER = 'http://localhost:' + port
 
 authServer(port, function (server) {
   test('auth - whoami works when not logged in', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' whoami --server=' + SERVER
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stdout.match(function (output) {
@@ -24,7 +23,6 @@ authServer(port, function (server) {
   })
 
   test('auth - register requires email', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' register --server=' + SERVER
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stderr.match(function (output) {
@@ -38,7 +36,6 @@ authServer(port, function (server) {
   })
 
   test('auth - register requires email and password', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' register --email=hello@bob.com --server=' + SERVER
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stderr.match(function (output) {
@@ -52,7 +49,6 @@ authServer(port, function (server) {
   })
 
   test('auth - register works', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' register --email=hello@bob.com --password=joe --server=' + SERVER
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stdout.match(function (output) {
@@ -64,7 +60,6 @@ authServer(port, function (server) {
   })
 
   test('auth - login requires email', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' login --password=joe --server=' + SERVER
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stderr.match(function (output) {
@@ -77,7 +72,6 @@ authServer(port, function (server) {
   })
 
   test('auth - login requires email and password', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' login --email=hello@bob.com --server=' + SERVER
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stderr.match(function (output) {
@@ -90,7 +84,6 @@ authServer(port, function (server) {
   })
 
   test('auth - login works', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' login --email=hello@bob.com --password=joe --server=' + SERVER
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stdout.match(function (output) {
@@ -102,7 +95,6 @@ authServer(port, function (server) {
   })
 
   test('auth - whoami works', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' whoami --server=' + SERVER
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stdout.match(function (output) {
@@ -114,7 +106,6 @@ authServer(port, function (server) {
   })
 
   test('auth - logout works', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' logout'
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stdout.match(function (output) {
@@ -126,11 +117,21 @@ authServer(port, function (server) {
   })
 
   test('auth - logout prints correctly when trying to log out twice', function (t) {
-    // cmd: dat clone <link> (same thing again as above)
     var cmd = dat + ' logout'
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stdout.match(function (output) {
       t.same('Not logged in.', output, 'output correct')
+      return true
+    })
+    st.stderr.empty()
+    st.end()
+  })
+
+  test('auth - whoami works after logging out', function (t) {
+    var cmd = dat + ' whoami --server=' + SERVER
+    var st = spawn(t, cmd, {cwd: baseTestDir})
+    st.stdout.match(function (output) {
+      t.same('Not logged in.', output)
       return true
     })
     st.stderr.empty()
