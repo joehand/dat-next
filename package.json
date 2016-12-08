@@ -27,7 +27,7 @@
     "progress-string": "^1.2.1",
     "status-logger": "^3.0.0",
     "subcommand": "^2.0.4",
-    "township-client": "^1.0.0",
+    "township-client": "^1.1.0",
     "xtend": "^4.0.1"
   },
   "devDependencies": {
