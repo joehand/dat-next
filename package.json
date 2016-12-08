@@ -1,23 +1,23 @@
 {
-  "name": "dat-verb",
+  "name": "dat-next",
   "version": "0.4.0",
   "description": "experimental dat cli client",
   "bin": {
-    "dat-verb": "bin/cli.js"
+    "dat-next": "bin/cli.js"
   },
   "scripts": {
     "test": "standard && tape tests/*.js | tap-spec"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/joehand/dat-verb.git"
+    "url": "git+https://github.com/joehand/dat-next.git"
   },
   "author": "Joe Hand <joe@hand.email> (https://joeahand.com/)",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/joehand/dat-verb/issues"
+    "url": "https://github.com/joehand/dat-next/issues"
   },
-  "homepage": "https://github.com/joehand/dat-verb#readme",
+  "homepage": "https://github.com/joehand/dat-next#readme",
   "dependencies": {
     "dat-doctor": "^1.0.1",
     "dat-key-as": "^1.0.0",

@@ -2,7 +2,7 @@
 
 var subcommand = require('subcommand')
 
-process.title = 'dat'
+process.title = 'dat-next'
 
 var config = {
   defaults: [
