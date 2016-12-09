@@ -24,11 +24,14 @@ Start sharing your Dat Archive over the network. Will import new or updated file
 ### Downloading
 
 ```
-dat-next clone <dat-link> [<folder>]
+dat-next clone <dat-link> [<folder>] [--temp]
 ```
 
 Clone a remote Dat Archive to a local folder. Will create a folder with the key name is no folder is specified.
 
+##### Options
+
+`--temp`: Creates a temporary database and doesn't save the metadata to disk, only the latest files.
 
 ```
 dat-next pull [--dir=<folder>]
