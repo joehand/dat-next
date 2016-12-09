@@ -30,7 +30,11 @@ var config = {
     require('../lib/commands/pull'),
     require('../lib/commands/snapshot'),
     require('../lib/commands/sync'),
-    require('../lib/commands/doctor')
+    require('../lib/commands/doctor'),
+    require('../lib/commands/auth/register'),
+    require('../lib/commands/auth/whoami'),
+    require('../lib/commands/auth/logout'),
+    require('../lib/commands/auth/login')
   ]
 }
 

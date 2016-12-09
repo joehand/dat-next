@@ -44,3 +44,14 @@ dat-next sync [--dir=<folder>]
 ```
 
 Download latest files and keep connection open to continue updating as remote source is updated.
+
+## Auth (experimental)
+
+```
+dat-verb logout
+dat-verb login
+dat-verb register
+dat-verb whoami
+```
+
+All take `server` option along with `username` and `password`.
