@@ -7,9 +7,22 @@ process.title = 'dat-next'
 var config = {
   defaults: [
     { name: 'dir', default: process.cwd() },
-    { name: 'logspeed', default: 200 }
+    { name: 'logspeed', default: 200 },
+    { name: 'port', default: 3282 },
+    { name: 'quiet', default: false },
+    { name: 'utp', default: true }
   ],
-  root: require('../lib/usage'),
+  root: {
+    options: [
+      {
+        name: 'version',
+        boolean: true,
+        default: false,
+        abbr: 'v'
+      }
+    ],
+    command: require('../lib/usage')
+  },
   none: require('../lib/usage'),
   commands: [
     require('../lib/commands/clone'),
