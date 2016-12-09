@@ -129,6 +129,20 @@ test('sync-owner - imports after no-import create', function (t) {
   st.end()
 })
 
+test('sync-owner - port and utp options', function (t) {
+  // cmd: dat sync
+  var cmd = dat + ' sync --port 3281 --no-utp'
+  var st = spawn(t, cmd, {cwd: fixtures})
+
+  st.stdout.match(function (output) {
+    t.fail('TODO') // how to check port & utp?
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end()
+})
+
 test.onFinish(function () {
   rimraf.sync(path.join(fixtures, '.dat'))
 })

@@ -69,6 +69,23 @@ test('create - sync after create ok', function (t) {
   st.end()
 })
 
+test('create - quiet only prints link', function (t) {
+  rimraf.sync(path.join(fixtures, '.dat'))
+  var cmd = dat + ' create --quiet'
+  var st = spawn(t, cmd, {cwd: fixtures})
+
+  st.stdout.empty()
+  st.stderr.match(function (output) {
+    var link = help.matchLink(output)
+    if (!link) return false
+    t.ok(link, 'prints link')
+    t.ok(output.indexOf('Archive') === -1, 'does not print other things')
+    st.kill()
+    return true
+  })
+  st.end()
+})
+
 test.onFinish(function () {
   rimraf.sync(path.join(fixtures, '.dat'))
 })
