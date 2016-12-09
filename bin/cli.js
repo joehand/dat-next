@@ -9,8 +9,8 @@ var config = {
     { name: 'dir', default: process.cwd() },
     { name: 'logspeed', default: 200 },
     { name: 'port', default: 3282 },
-    { name: 'quiet', default: false },
-    { name: 'utp', default: true }
+    { name: 'quiet', default: false, boolean: true },
+    { name: 'utp', default: true, boolean: true }
   ],
   root: {
     options: [
