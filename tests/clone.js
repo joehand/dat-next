@@ -87,6 +87,17 @@ test('clone - specify dir', function (t) {
   st.end()
 })
 
+test('clone - quiet', function (t) {
+  var key = shareDat.key.toString('hex')
+  var customDir = 'shhhh_dir'
+  var cmd = dat + ' clone ' + key + ' ' + customDir + ' --quiet'
+  var st = spawn(t, cmd, {cwd: baseTestDir})
+  st.succeeds('exits after finishing download')
+  st.stdout.empty()
+  st.stderr.empty()
+  st.end()
+})
+
 test('close sharer', function (t) {
   shareDat.close(function () {
     rimraf.sync(path.join(shareDat.path, '.dat'))

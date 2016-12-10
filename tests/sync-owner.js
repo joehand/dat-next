@@ -1,4 +1,5 @@
 var fs = require('fs')
+var net = require('net')
 var path = require('path')
 var test = require('tape')
 var mkdirp = require('mkdirp')
@@ -127,6 +128,34 @@ test('sync-owner - imports after no-import create', function (t) {
   })
   st.stderr.empty()
   st.end()
+})
+
+test('sync-owner - port and utp options', function (t) {
+  var port = 3281
+  var cmd = dat + ' sync --port ' + port + ' --no-utp'
+  var st = spawn(t, cmd, {cwd: fixtures, end: false})
+  st.stderr.empty()
+
+  var server = net.createServer()
+  server.once('error', function (err) {
+    if (err.code !== 'EADDRINUSE') return t.error(err)
+    t.skip('TODO: correct port in use')
+    done()
+  })
+  server.once('listening', function () {
+    t.skip(`TODO: port ${server.address().port} should be in use`)
+    done()
+  })
+  server.listen(port)
+
+  t.skip('TODO: check utp option') // TODO: how to check utp?
+
+  function done () {
+    server.close(function () {
+      st.kill()
+      t.end()
+    })
+  }
 })
 
 test.onFinish(function () {
