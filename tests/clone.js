@@ -1,6 +1,7 @@
 var path = require('path')
 var test = require('tape')
 var rimraf = require('rimraf')
+var mkdirp = require('mkdirp')
 var spawn = require('./helpers/spawn.js')
 var help = require('./helpers')
 
@@ -96,6 +97,54 @@ test('clone - quiet', function (t) {
   st.stdout.empty()
   st.stderr.empty()
   st.end()
+})
+
+test('clone - dat:// link', function (t) {
+  var key = 'dat://' + shareDat.key.toString('hex') + '/'
+  var baseDir = path.join(baseTestDir, 'dat_proto_dir')
+  mkdirp.sync(baseDir)
+  var downloadDir = path.join(baseDir, shareDat.key.toString('hex'))
+  var cmd = dat + ' clone ' + key
+  var st = spawn(t, cmd, {cwd: baseDir})
+  st.succeeds('exits after finishing download')
+  st.stdout.match(function (output) {
+    var downloadFinished = output.indexOf('Download Finished') > -1
+    if (!downloadFinished) return false
+
+    t.ok(output.indexOf(downloadDir) > -1, 'prints dir')
+    t.ok(help.isDir(downloadDir, 'creates download directory'))
+
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end(function () {
+    rimraf.sync(downloadDir)
+  })
+})
+
+test('clone - dat.land link', function (t) {
+  var key = 'dat.land/' + shareDat.key.toString('hex') + '/'
+  var baseDir = path.join(baseTestDir, 'dat_land_dir')
+  mkdirp.sync(baseDir)
+  var downloadDir = path.join(baseDir, shareDat.key.toString('hex'))
+  var cmd = dat + ' clone ' + key
+  var st = spawn(t, cmd, {cwd: baseDir})
+  st.succeeds('exits after finishing download')
+  st.stdout.match(function (output) {
+    var downloadFinished = output.indexOf('Download Finished') > -1
+    if (!downloadFinished) return false
+
+    t.ok(output.indexOf(downloadDir) > -1, 'prints dir')
+    t.ok(help.isDir(downloadDir, 'creates download directory'))
+
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end(function () {
+    rimraf.sync(downloadDir)
+  })
 })
 
 test('close sharer', function (t) {
