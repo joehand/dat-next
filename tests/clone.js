@@ -209,7 +209,6 @@ test('clone - hypercore link', function (t) {
       st.kill()
       return true
     })
-    st.fails('Does not download')
     st.end(function () {
       close()
     })
