@@ -63,7 +63,6 @@ test('clone - errors on existing dir', function (t) {
     return true
   })
   st.stdout.empty()
-  st.fails()
   st.end()
 })
 
