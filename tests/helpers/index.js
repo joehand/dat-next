@@ -5,11 +5,15 @@ var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
 var recursiveReadSync = require('recursive-readdir-sync')
 var Dat = require('dat-node')
+var hypercore = require('hypercore')
+var memdb = require('memdb')
+var swarm = require('hyperdiscovery')
 
 module.exports.matchLink = matchDatLink
 module.exports.isDir = isDir
 module.exports.testFolder = newTestFolder
 module.exports.shareFixtures = shareFixtures
+module.exports.shareFeed = shareFeed
 module.exports.fileList = fileList
 
 function shareFixtures (opts, cb) {
@@ -58,5 +62,21 @@ function isDir (dir) {
     return fs.statSync(dir).isDirectory()
   } catch (e) {
     return false
+  }
+}
+
+function shareFeed (cb) {
+  var core = hypercore(memdb())
+  var feed = core.createFeed()
+  feed.append('hello world', function (err) {
+    if (err) throw err
+    cb(null, feed.key.toString('hex'), close)
+  })
+  var sw = swarm(feed)
+
+  function close (cb) {
+    feed.close(function () {
+      sw.close(cb)
+    })
   }
 }
