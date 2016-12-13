@@ -35,6 +35,7 @@
     "appa": "^5.0.0",
     "homedir": "^0.6.0",
     "hypercore": "^4.15.1",
+    "hyperdiscovery": "^1.0.1",
     "memdb": "^1.3.1",
     "mkdirp": "^0.5.1",
     "recursive-readdir-sync": "^1.0.6",
