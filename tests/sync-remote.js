@@ -23,8 +23,8 @@ test('sync-remote - default opts', function (t) {
         var cmd = dat + ' sync'
         var st = spawn(t, cmd, {cwd: datDir})
         st.stdout.match(function (output) {
-          var connected = output.indexOf('peer') > -1
-          if (!connected) return false
+          var updated = output.indexOf('Files updated') > -1
+          if (!updated) return false
 
           var fileRe = new RegExp('2 files')
           var bytesRe = new RegExp(/1\.\d{1,2} kB/)
