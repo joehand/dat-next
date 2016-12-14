@@ -63,7 +63,6 @@ test('clone - errors on existing dir', function (t) {
     return true
   })
   st.stdout.empty()
-  st.fails()
   st.end()
 })
 
@@ -194,6 +193,25 @@ test('clone - with --temp', function (t) {
     st.succeeds('exits after finishing download')
     st.stderr.empty()
     st.end()
+  })
+})
+
+test('clone - hypercore link', function (t) {
+  help.shareFeed(function (_, key, close) {
+    var cmd = dat + ' clone ' + key
+    var st = spawn(t, cmd, {cwd: baseTestDir})
+    var datDir = path.join(baseTestDir, key)
+    st.stderr.match(function (output) {
+      var error = output.indexOf('not a Dat Archive') > -1
+      if (!error) return false
+      t.ok(error, 'has error')
+      t.ok(!help.isDir(datDir), 'download dir removed')
+      st.kill()
+      return true
+    })
+    st.end(function () {
+      close()
+    })
   })
 })
 
