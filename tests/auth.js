@@ -1,7 +1,6 @@
 var test = require('tape')
 var path = require('path')
 var fs = require('fs')
-var homedir = require('homedir')
 var spawn = require('./helpers/spawn')
 var help = require('./helpers')
 var authServer = require('./helpers/auth-server')
@@ -11,7 +10,7 @@ var baseTestDir = help.testFolder()
 
 var port = process.env.PORT || 3000
 var SERVER = 'http://localhost:' + port
-var config = '.datrc-test'
+var config = path.join(__dirname, '.datrc-test')
 var opts = ' --server=' + SERVER + ' --config=' + config
 
 dat += opts
@@ -20,11 +19,11 @@ authServer(port, function (server) {
   test('auth - whoami works when not logged in', function (t) {
     var cmd = dat + ' whoami '
     var st = spawn(t, cmd, {cwd: baseTestDir})
-    st.stdout.match(function (output) {
-      t.same('Not logged in.', output, 'printed correct output')
+    st.stderr.match(function (output) {
+      t.same('Not logged in.', output.trim(), 'printed correct output')
       return true
     })
-    st.stderr.empty()
+    st.stdout.empty()
     st.end()
   })
 
@@ -104,7 +103,7 @@ authServer(port, function (server) {
     var cmd = dat + ' whoami'
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stdout.match(function (output) {
-      t.same('hello@bob.com', output, 'email printed')
+      t.same('hello@bob.com', output.trim(), 'email printed')
       return true
     })
     st.stderr.empty()
@@ -115,7 +114,7 @@ authServer(port, function (server) {
     var cmd = dat + ' logout'
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stdout.match(function (output) {
-      t.same('Logged out.', output, 'output correct')
+      t.same('Logged out.', output.trim(), 'output correct')
       return true
     })
     st.stderr.empty()
@@ -125,28 +124,28 @@ authServer(port, function (server) {
   test('auth - logout prints correctly when trying to log out twice', function (t) {
     var cmd = dat + ' logout'
     var st = spawn(t, cmd, {cwd: baseTestDir})
-    st.stdout.match(function (output) {
-      t.same('Not logged in.', output, 'output correct')
+    st.stderr.match(function (output) {
+      t.same('Not logged in.', output.trim(), 'output correct')
       return true
     })
-    st.stderr.empty()
+    st.stdout.empty()
     st.end()
   })
 
   test('auth - whoami works after logging out', function (t) {
     var cmd = dat + ' whoami'
     var st = spawn(t, cmd, {cwd: baseTestDir})
-    st.stdout.match(function (output) {
-      t.same('Not logged in.', output)
+    st.stderr.match(function (output) {
+      t.same('Not logged in.', output.trim())
       return true
     })
-    st.stderr.empty()
+    st.stdout.empty()
     st.end()
   })
 
   test.onFinish(function () {
     server.close(function () {
-      fs.unlink(path.join(homedir(), config), function () {
+      fs.unlink(config, function () {
         // done!
       })
     })
