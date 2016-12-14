@@ -60,3 +60,4 @@ All take `server` option along with `username` and `password`.
 
 * `npm run test` to run tests
 * `npm run auth-server` to run a local auth server for testing
+* Run with `--use-routes` option for testing local servers with the default datfolder routes.
