@@ -27,14 +27,15 @@ var config = {
   commands: [
     require('../lib/commands/clone'),
     require('../lib/commands/create'),
+    require('../lib/commands/doctor'),
+    require('../lib/commands/publish'),
     require('../lib/commands/pull'),
     require('../lib/commands/snapshot'),
     require('../lib/commands/sync'),
-    require('../lib/commands/doctor'),
-    require('../lib/commands/auth/register'),
-    require('../lib/commands/auth/whoami'),
+    require('../lib/commands/auth/login'),
     require('../lib/commands/auth/logout'),
-    require('../lib/commands/auth/login')
+    require('../lib/commands/auth/register'),
+    require('../lib/commands/auth/whoami')
   ]
 }
 
