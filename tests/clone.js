@@ -215,6 +215,22 @@ test('clone - hypercore link', function (t) {
   })
 })
 
+test('clone - invalid link', function (t) {
+  var key = 'best-key-ever'
+  var cmd = dat + ' clone ' + key
+  var st = spawn(t, cmd, {cwd: baseTestDir})
+  var datDir = path.join(baseTestDir, key)
+  st.stderr.match(function (output) {
+    var error = output.indexOf('not a valid Dat link') > -1
+    if (!error) return false
+    t.ok(error, 'has error')
+    t.ok(!help.isDir(datDir), 'download dir removed')
+    st.kill()
+    return true
+  })
+  st.end()
+})
+
 test('close sharer', function (t) {
   shareDat.close(function () {
     rimraf.sync(path.join(shareDat.path, '.dat'))
