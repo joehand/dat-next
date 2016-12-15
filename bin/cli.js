@@ -26,6 +26,7 @@ var config = {
   none: require('../lib/usage'),
   commands: [
     require('../lib/commands/clone'),
+    require('../lib/commands/keys'),
     require('../lib/commands/create'),
     require('../lib/commands/pull'),
     require('../lib/commands/snapshot'),
