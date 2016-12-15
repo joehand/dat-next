@@ -3,7 +3,7 @@ var os = require('os')
 var path = require('path')
 var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
-var asDatKey = require('dat-key-as').string
+var datKeyAs = require('dat-key-as')
 var recursiveReadSync = require('recursive-readdir-sync')
 var Dat = require('dat-node')
 var hypercore = require('hypercore')
@@ -57,7 +57,7 @@ function matchDatLink (str) {
   if (!match) return false
   var key
   try {
-    key = asDatKey(match[0].trim())
+    key = datKeyAs.str(match[0].trim())
   } catch (e) {
     return false
   }
