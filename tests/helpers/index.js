@@ -3,6 +3,7 @@ var os = require('os')
 var path = require('path')
 var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
+var asDatKey = require('dat-key-as').string
 var recursiveReadSync = require('recursive-readdir-sync')
 var Dat = require('dat-node')
 var hypercore = require('hypercore')
@@ -54,7 +55,13 @@ function newTestFolder () {
 function matchDatLink (str) {
   var match = str.match(/[A-Za-z0-9]{64}/)
   if (!match) return false
-  return match[0].trim()
+  var key
+  try {
+    key = asDatKey(match[0].trim())
+  } catch (e) {
+    return false
+  }
+  return key
 }
 
 function isDir (dir) {
