@@ -23,7 +23,7 @@ test('snapshot - default opts', function (t) {
 
     t.ok(help.isDir(path.join(fixtures, '.dat')), 'creates dat directory')
 
-    var fileRe = new RegExp('2 files')
+    var fileRe = new RegExp('3 files')
     var bytesRe = new RegExp(/1\.\d{1,2} kB/)
 
     t.ok(help.matchLink(output), 'prints link')

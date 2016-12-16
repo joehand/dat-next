@@ -26,7 +26,7 @@ test('sync-remote - default opts', function (t) {
           var updated = output.indexOf('Files updated') > -1
           if (!updated) return false
 
-          var fileRe = new RegExp('2 files')
+          var fileRe = new RegExp('3 files')
           var bytesRe = new RegExp(/1\.\d{1,2} kB/)
 
           key = help.matchLink(output)
