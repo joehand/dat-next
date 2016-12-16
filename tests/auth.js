@@ -27,64 +27,14 @@ authServer(port, function (server) {
     st.end()
   })
 
-  test('auth - register requires email', function (t) {
-    var cmd = dat + ' register '
-    var st = spawn(t, cmd, {cwd: baseTestDir})
-    st.stderr.match(function (output) {
-      t.ok(output.indexOf('Email is required') > -1, 'outputs correct error message')
-      st.kill()
-      return true
-    })
-    st.stdout.empty()
-    st.fails()
-    st.end()
-  })
-
-  test('auth - register requires email and password', function (t) {
-    var cmd = dat + ' register --email=hello@bob.com'
-    var st = spawn(t, cmd, {cwd: baseTestDir})
-    st.stderr.match(function (output) {
-      t.ok(output.indexOf('Password is required') > -1, 'outputs correct error message')
-      st.kill()
-      return true
-    })
-    st.stdout.empty()
-    st.fails()
-    st.end()
-  })
-
   test('auth - register works', function (t) {
-    var cmd = dat + ' register --email=hello@bob.com --password=joe'
+    var cmd = dat + ' register --email=hello@bob.com --password=joe --username=joe'
     var st = spawn(t, cmd, {cwd: baseTestDir})
     st.stdout.match(function (output) {
       t.same(output.trim(), 'Registered successfully.', 'output success message')
       return true
     })
     st.stderr.empty()
-    st.end()
-  })
-
-  test('auth - login requires email', function (t) {
-    var cmd = dat + ' login --password=joe'
-    var st = spawn(t, cmd, {cwd: baseTestDir})
-    st.stderr.match(function (output) {
-      t.ok(output.indexOf('Email is required') > -1, 'outputs correct error message')
-      st.kill()
-      return true
-    })
-    st.stdout.empty()
-    st.end()
-  })
-
-  test('auth - login requires email and password', function (t) {
-    var cmd = dat + ' login --email=hello@bob.com'
-    var st = spawn(t, cmd, {cwd: baseTestDir})
-    st.stderr.match(function (output) {
-      t.ok(output.indexOf('Password is required') > -1, 'outputs correct error message')
-      st.kill()
-      return true
-    })
-    st.stdout.empty()
     st.end()
   })
 
