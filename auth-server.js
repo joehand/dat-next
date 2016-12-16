@@ -1,8 +1,37 @@
-var authServer = require('./auth-server')
+var path = require('path')
+var Server = require('dat.land/server')
+var initDb = require('dat.land/server/database/init')
+var rimraf = require('rimraf')
 
-// Useful for testing auth stuff for development!
-// npm run auth-server
+var config = {
+  township: {
+    secret: 'very secret code',
+    db: path.join(__dirname, 'test-township.db')
+  },
+  db: {
+    dialect: 'sqlite3',
+    connection: { filename: path.join(__dirname, 'test-sqlite.db') },
+    useNullAsDefault: true
+  },
+  whitelist: false,
+  port: process.env.PORT || 8888
+}
 
-authServer(8080, function (server) {
-  console.log('auth server running on http://localhost:8080')
+initDb(config.db, function (err, db) {
+  if (err) throw err
+  const server = Server(config, db)
+  server.listen(config.port, function () {
+    console.log('listening', config.port)
+  })
+
+  process.on('exit', close)
+  process.on('SIGINT', close)
+
+  function close (cb) {
+    server.close(function () {
+      rimraf.sync(config.township.db)
+      rimraf.sync(config.db.connection.filename)
+      process.exit()
+    })
+  }
 })
