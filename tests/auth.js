@@ -1,12 +1,14 @@
 var test = require('tape')
 var path = require('path')
 var fs = require('fs')
+var rimraf = require('rimraf')
 var spawn = require('./helpers/spawn')
 var help = require('./helpers')
 var authServer = require('./helpers/auth-server')
 
 var dat = path.resolve(path.join(__dirname, '..', 'bin', 'cli.js'))
 var baseTestDir = help.testFolder()
+var fixtures = path.join(__dirname, 'fixtures')
 
 var port = process.env.PORT || 3000
 var SERVER = 'http://localhost:' + port + '/api/v1'
@@ -59,6 +61,46 @@ authServer(port, function (err, server, closeServer) {
     })
     st.stderr.empty()
     st.end()
+  })
+
+  test('auth - publish before create fails', function (t) {
+    var cmd = dat + ' publish'
+    var st = spawn(t, cmd, {cwd: fixtures})
+    st.stderr.match(function (output) {
+      t.ok(output.indexOf('create an archive') > -1, 'Create archive before pub')
+      return true
+    })
+    st.stdout.empty()
+    st.end()
+  })
+
+  test('auth - create dat to publish', function (t) {
+    rimraf.sync(path.join(fixtures, '.dat'))
+    var cmd = dat + ' create --no-import'
+    var st = spawn(t, cmd, {cwd: fixtures})
+    st.stdout.match(function (output) {
+      var link = help.matchLink(output)
+      if (!link) return false
+      t.ok(link, 'prints link')
+      return true
+    })
+    st.stderr.empty()
+    st.end()
+  })
+
+  test('auth - publish our awesome dat', function (t) {
+    var cmd = dat + ' publish --name awesome'
+    var st = spawn(t, cmd, {cwd: fixtures})
+    st.stdout.match(function (output) {
+      var published = output.indexOf('Successfully published') > -1
+      if (!published) return false
+      t.ok(published, 'published')
+      return true
+    })
+    st.stderr.empty()
+    st.end(function () {
+      rimraf.sync(path.join(fixtures, '.dat'))
+    })
   })
 
   test('auth - logout works', function (t) {
