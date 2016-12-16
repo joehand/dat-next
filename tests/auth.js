@@ -9,13 +9,14 @@ var dat = path.resolve(path.join(__dirname, '..', 'bin', 'cli.js'))
 var baseTestDir = help.testFolder()
 
 var port = process.env.PORT || 3000
-var SERVER = 'http://localhost:' + port
+var SERVER = 'http://localhost:' + port + '/api/v1'
 var config = path.join(__dirname, '.datrc-test')
 var opts = ' --server=' + SERVER + ' --config=' + config
 
 dat += opts
 
-authServer(port, function (server) {
+authServer(port, function (err, server, closeServer) {
+  if (err) throw err
   test('auth - whoami works when not logged in', function (t) {
     var cmd = dat + ' whoami '
     var st = spawn(t, cmd, {cwd: baseTestDir})
@@ -94,7 +95,7 @@ authServer(port, function (server) {
   })
 
   test.onFinish(function () {
-    server.close(function () {
+    closeServer(function () {
       fs.unlink(config, function () {
         // done!
       })
