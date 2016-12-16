@@ -35,8 +35,18 @@ var config = {
     require('../lib/commands/auth/whoami'),
     require('../lib/commands/auth/logout'),
     require('../lib/commands/auth/login')
-  ]
+  ],
+  aliases: {
+    'init': 'create'
+  }
 }
 
 var match = subcommand(config)
-match(process.argv.slice(2))
+match(alias(process.argv.slice(2)))
+
+function alias (argv) {
+  var cmd = argv[0]
+  if (!config.aliases[cmd]) return argv
+  argv[0] = config.aliases[cmd]
+  return argv
+}

@@ -85,6 +85,22 @@ test('create - quiet only prints link', function (t) {
   st.end()
 })
 
+test('create - init alias okay', function (t) {
+  rimraf.sync(path.join(fixtures, '.dat'))
+  var cmd = dat + ' init'
+  var st = spawn(t, cmd, {cwd: fixtures})
+
+  st.stderr.empty()
+  st.stdout.match(function (output) {
+    var importFinished = output.indexOf('import finished') > -1
+    if (!importFinished) return false
+    t.pass('init did create')
+    st.kill()
+    return true
+  })
+  st.end()
+})
+
 test.onFinish(function () {
   rimraf.sync(path.join(fixtures, '.dat'))
 })
