@@ -1,6 +1,6 @@
 var path = require('path')
-var Server = require('dat.land/server')
-var initDb = require('dat.land/server/database/init')
+var Server = require('dat-land/server')
+var initDb = require('dat-land/server/database/init')
 var rimraf = require('rimraf')
 
 module.exports = createServer
