@@ -31,6 +31,8 @@ test('create - default opts', function (t) {
     t.ok(output.match(fileRe), 'total size: files okay')
     t.ok(output.match(bytesRe), 'total size: bytes okay')
 
+    t.same(help.datJson(fixtures).title, 'fixtures', 'dat.json: has title')
+
     st.kill()
     return true
   })

@@ -13,6 +13,7 @@ var swarm = require('hyperdiscovery')
 module.exports.matchLink = matchDatLink
 module.exports.isDir = isDir
 module.exports.testFolder = newTestFolder
+module.exports.datJson = datJson
 module.exports.shareFixtures = shareFixtures
 module.exports.shareFeed = shareFeed
 module.exports.fileList = fileList
@@ -62,6 +63,14 @@ function matchDatLink (str) {
     return false
   }
   return key
+}
+
+function datJson (filepath) {
+  try {
+    return JSON.parse(fs.readFileSync(path.join(filepath, 'dat.json')))
+  } catch (e) {
+    return {}
+  }
 }
 
 function isDir (dir) {
