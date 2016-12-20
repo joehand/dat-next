@@ -2,6 +2,7 @@ var test = require('tape')
 var path = require('path')
 var fs = require('fs')
 var rimraf = require('rimraf')
+var mkdirp = require('mkdirp')
 var spawn = require('./helpers/spawn')
 var help = require('./helpers')
 var authServer = require('./helpers/auth-server')
@@ -101,6 +102,27 @@ authServer(port, function (err, server, closeServer) {
     st.end()
   })
 
+  test('auth - clone from registry', function (t) {
+    // MAKE SURE THESE MATCH WHAT is published above
+    // TODO: be less lazy and make a publish helper
+    var shortName = 'joe/awesome' // they'll never guess who wrote these tests
+    var baseDir = path.join(baseTestDir, 'dat_registry_dir')
+    mkdirp.sync(baseDir)
+    var downloadDir = path.join(baseDir, shortName.split('/')[1])
+    var cmd = dat + ' clone ' + shortName
+    var st = spawn(t, cmd, {cwd: baseDir})
+    st.stdout.match(function (output) {
+      t.ok(output.indexOf('Looking for') > -1, 'starts looking for peers')
+      t.ok(output.indexOf(downloadDir) > -1, 'prints dir')
+      st.kill()
+      return true
+    })
+    st.stderr.empty()
+    st.end(function () {
+      rimraf.sync(downloadDir)
+    })
+  })
+
   test('auth - publish our awesome dat without a dat.json file', function (t) {
     rimraf(path.join(fixtures, 'dat.json'), function (err) {
       t.ifError(err)
@@ -117,6 +139,24 @@ authServer(port, function (err, server, closeServer) {
       st.end(function () {
         rimraf.sync(path.join(fixtures, '.dat'))
       })
+    })
+  })
+
+  test('auth - bad clone from registry', function (t) {
+    var shortName = 'joe/not-at-all-awesome'
+    var baseDir = path.join(baseTestDir, 'dat_registry_dir_too')
+    mkdirp.sync(baseDir)
+    var downloadDir = path.join(baseDir, shortName.split('/')[1])
+    var cmd = dat + ' clone ' + shortName
+    var st = spawn(t, cmd, {cwd: baseDir})
+    st.stderr.match(function (output) {
+      t.same(output.trim(), 'Dat archive not found on registry.', 'not found')
+      st.kill()
+      return true
+    })
+    st.stdout.empty()
+    st.end(function () {
+      rimraf.sync(downloadDir)
     })
   })
 
