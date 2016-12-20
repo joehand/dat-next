@@ -66,11 +66,11 @@ authServer(port, function (err, server, closeServer) {
   test('auth - publish before create fails', function (t) {
     var cmd = dat + ' publish'
     var st = spawn(t, cmd, {cwd: fixtures})
+    st.stdout.empty()
     st.stderr.match(function (output) {
       t.ok(output.indexOf('create an archive') > -1, 'Create archive before pub')
       return true
     })
-    st.stdout.empty()
     st.end()
   })
 
@@ -98,8 +98,25 @@ authServer(port, function (err, server, closeServer) {
       return true
     })
     st.stderr.empty()
-    st.end(function () {
-      rimraf.sync(path.join(fixtures, '.dat'))
+    st.end()
+  })
+
+  test('auth - publish our awesome dat without a dat.json file', function (t) {
+    rimraf(path.join(fixtures, 'dat.json'), function (err) {
+      t.ifError(err)
+      var cmd = dat + ' publish --name another-awesome'
+      var st = spawn(t, cmd, {cwd: fixtures})
+      st.stdout.match(function (output) {
+        var published = output.indexOf('Successfully published') > -1
+        if (!published) return false
+        t.ok(published, 'published')
+        t.same(help.datJson(fixtures).name, 'another-awesome', 'has dat.json with name')
+        return true
+      })
+      st.stderr.empty()
+      st.end(function () {
+        rimraf.sync(path.join(fixtures, '.dat'))
+      })
     })
   })
 
