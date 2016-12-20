@@ -10,7 +10,8 @@ var config = {
     { name: 'logspeed', default: 200 },
     { name: 'port', default: 3282 },
     { name: 'quiet', default: false, boolean: true },
-    { name: 'utp', default: true, boolean: true }
+    { name: 'utp', default: true, boolean: true },
+    { name: 'server', default: 'https://dat.land/api/v1' }
   ],
   root: {
     options: [
