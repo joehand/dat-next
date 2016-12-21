@@ -6,7 +6,7 @@
     "dat-next": "bin/cli.js"
   },
   "scripts": {
-    "auth-server": "DEBUG=* node auth-server.js",
+    "auth-server": "DEBUG=* node scripts/auth-server.js",
     "test": "standard && tape tests/*.js | tap-spec"
   },
   "repository": {
