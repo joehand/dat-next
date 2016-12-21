@@ -3,7 +3,7 @@ var os = require('os')
 var path = require('path')
 var mkdirp = require('mkdirp')
 var rimraf = require('rimraf')
-var datKeyAs = require('dat-key-as')
+var encoding = require('dat-encoding')
 var recursiveReadSync = require('recursive-readdir-sync')
 var Dat = require('dat-node')
 var hypercore = require('hypercore')
@@ -58,7 +58,7 @@ function matchDatLink (str) {
   if (!match) return false
   var key
   try {
-    key = datKeyAs.str(match[0].trim())
+    key = encoding.toStr(match[0].trim())
   } catch (e) {
     return false
   }
@@ -86,7 +86,7 @@ function shareFeed (cb) {
   var feed = core.createFeed()
   feed.append('hello world', function (err) {
     if (err) throw err
-    cb(null, feed.key.toString('hex'), close)
+    cb(null, encoding.toStr(feed.key), close)
   })
   var sw = swarm(feed)
 
