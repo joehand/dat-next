@@ -11,6 +11,9 @@ var fixtures = path.join(__dirname, 'fixtures')
 // os x adds this if you view the fixtures in finder and breaks the file count assertions
 try { fs.unlinkSync(path.join(fixtures, '.DS_Store')) } catch (e) { /* ignore error */ }
 
+// start without dat.json
+try { fs.unlinkSync(path.join(fixtures, 'dat.json')) } catch (e) { /* ignore error */ }
+
 test('create - default opts', function (t) {
   rimraf.sync(path.join(fixtures, '.dat'))
   // cmd: dat create
