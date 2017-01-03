@@ -9,8 +9,10 @@ var config = {
     { name: 'dir', default: process.cwd() },
     { name: 'logspeed', default: 200 },
     { name: 'port', default: 3282 },
-    { name: 'quiet', default: false, boolean: true },
     { name: 'utp', default: true, boolean: true },
+    { name: 'debug', default: process.env.DEBUG },
+    { name: 'quiet', default: false, boolean: true },
+    { name: 'verbose', default: false, boolean: true, abbr: 'v' },
     { name: 'server', default: 'https://dat.land/api/v1' }
   ],
   root: {
