@@ -7,21 +7,21 @@ var help = require('./helpers')
 var dat = path.resolve(path.join(__dirname, '..', 'bin', 'cli.js'))
 var baseTestDir = help.testFolder()
 var shareDat
+var syncDir
 
 test('sync-remote - default opts', function (t) {
   // cmd: dat sync
   var key
-  var datDir
 
   help.shareFixtures({import: false}, function (_, fixturesDat) {
     shareDat = fixturesDat
     key = shareDat.key.toString('hex')
-    datDir = path.join(baseTestDir, key)
+    syncDir = path.join(baseTestDir, key)
 
     makeClone(function () {
       shareDat.importFiles(function () {
         var cmd = dat + ' sync'
-        var st = spawn(t, cmd, {cwd: datDir})
+        var st = spawn(t, cmd, {cwd: syncDir})
         st.stdout.match(function (output) {
           var updated = output.indexOf('Files updated') > -1
           if (!updated) return false
@@ -58,6 +58,21 @@ test('sync-remote - default opts', function (t) {
     })
     st.stderr.empty()
   }
+})
+
+test('sync-remote - shorthand sync', function (t) {
+  // cmd: dat sync
+  var cmd = dat + ' .'
+  var st = spawn(t, cmd, {cwd: syncDir})
+  st.stdout.match(function (output) {
+    var syncing = output.indexOf('Syncing Dat Archive') > -1
+    if (!syncing) return false
+    t.ok(help.matchLink(output), 'prints link')
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end()
 })
 
 test('close sharer', function (t) {

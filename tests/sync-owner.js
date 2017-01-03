@@ -158,6 +158,23 @@ test('sync-owner - port and utp options', function (t) {
   }
 })
 
+test('sync-owner - shorthand', function (t) {
+  var cmd = dat + ' .'
+  var st = spawn(t, cmd, {cwd: fixtures})
+
+  st.stdout.match(function (output) {
+    var sharing = output.indexOf('Sharing latest') > -1
+    if (!sharing) return false
+
+    t.ok(help.matchLink(output), 'prints link')
+
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end()
+})
+
 test.onFinish(function () {
   rimraf.sync(path.join(fixtures, '.dat'))
 })
