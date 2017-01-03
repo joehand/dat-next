@@ -35,6 +35,7 @@ var config = {
     require('../lib/commands/publish'),
     require('../lib/commands/pull'),
     require('../lib/commands/snapshot'),
+    require('../lib/commands/status'),
     require('../lib/commands/sync'),
     require('../lib/commands/auth/register'),
     require('../lib/commands/auth/whoami'),
