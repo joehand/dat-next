@@ -38,7 +38,11 @@ var config = {
     require('../lib/commands/auth/register'),
     require('../lib/commands/auth/whoami'),
     require('../lib/commands/auth/logout'),
-    require('../lib/commands/auth/login')
+    require('../lib/commands/auth/login'),
+    {
+      name: 'help',
+      command: require('../lib/usage')
+    }
   ],
   aliases: {
     'init': 'create'
