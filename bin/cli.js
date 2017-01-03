@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var subcommand = require('subcommand')
+var usage = require('../lib/usage')
 
 process.title = 'dat-next'
 
@@ -24,9 +25,9 @@ var config = {
         abbr: 'v'
       }
     ],
-    command: require('../lib/usage')
+    command: usage
   },
-  none: require('../lib/usage'),
+  none: syncShorthand,
   commands: [
     require('../lib/commands/clone'),
     require('../lib/commands/create'),
@@ -41,7 +42,7 @@ var config = {
     require('../lib/commands/auth/login'),
     {
       name: 'help',
-      command: require('../lib/usage')
+      command: usage
     }
   ],
   aliases: {
@@ -57,4 +58,12 @@ function alias (argv) {
   if (!config.aliases[cmd]) return argv
   argv[0] = config.aliases[cmd]
   return argv
+}
+
+function syncShorthand (opts) {
+  if (!opts._.length) return usage(opts)
+  opts.dir = opts._[0]
+  var sync = require('../lib/commands/sync')
+  opts.import = opts.import || true // TODO: use default opts in sync
+  sync.command(opts)
 }
