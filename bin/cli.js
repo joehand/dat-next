@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 
 var subcommand = require('subcommand')
+var fs = require('fs')
 var usage = require('../lib/usage')
 
 process.title = 'dat-next'
@@ -62,8 +63,16 @@ function alias (argv) {
 
 function syncShorthand (opts) {
   if (!opts._.length) return usage(opts)
-  opts.dir = opts._[0]
-  var sync = require('../lib/commands/sync')
-  opts.import = opts.import || true // TODO: use default opts in sync
-  sync.command(opts)
+  try {
+    opts.dir = opts._[0]
+    fs.stat(opts.dir, function (err, stat) {
+      if (err || !stat.isDirectory()) return usage(opts)
+
+      var sync = require('../lib/commands/sync')
+      opts.import = opts.import || true // TODO: use default opts in sync
+      sync.command(opts)
+    })
+  } catch (e) {
+    return usage(opts)
+  }
 }
