@@ -19,6 +19,7 @@ function createServer (port, cb) {
     whitelist: false,
     port: port || 8888
   }
+  rimraf.sync(config.db.connection.filename)
 
   initDb(config.db, function (err, db) {
     if (err) return cb(err)
