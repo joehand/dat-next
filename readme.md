@@ -43,8 +43,7 @@ See the [installation troubleshooting](https://github.com/datproject/dat#trouble
 After you clone a Dat archive, you can update the files later:
 
 1. `cd download-folder`
-2a. `dat pull` - download updates and exit
-2b. `dat sync` - download live updates and re-upload to network
+2. `dat pull` - download updates and exit
 
 ### Demo File Download
 
@@ -86,22 +85,32 @@ Once a Dat is created, you can run all the commands inside that folder, similar 
 
 ### Sharing
 
+#### Creating a Dat archive
+
 ```
 dat-next create [--dir=<folder>] [--no-import]
-dat-next snapshot [--dir=<folder>]
 ```
 
 Create a new Dat Archive in the current directory (or specify `--dir`).
 Will automatically import the files in that directory to the archive.
 
-Snapshot will create the archive in snapshot, `{live: false}` mode.
 
 ```
 dat-next sync [--dir=<folder>] [--no-import]
 ```
 
 Start sharing your Dat Archive over the network.
-Will import new or updated files since you ran `create` or `sync` last.
+Sync will import new or updated files since you ran `create` or `sync` last.
+
+
+#### Snapshot
+
+```
+dat-next snapshot [--dir=<folder>]
+```
+
+Snapshot will create the archive in snapshot, `{live: false}` mode.
+
 
 ### Downloading
 
@@ -116,6 +125,10 @@ Will create a folder with the key name is no folder is specified.
 
 `--temp`: Creates a temporary database and doesn't save the metadata to disk, only the latest files.
 
+#### Updating Downloaded Archives
+
+Once a Dat is clone, you can run either `dat pull` or `dat sync` in the folder to update the archive.
+
 ```
 dat-next pull [--dir=<folder>]
 ```
@@ -128,9 +141,9 @@ dat-next sync [--dir=<folder>]
 
 Download latest files and keep connection open to continue updating as remote source is updated.
 
-## Registry and Authentication
+## Dat Registry and Authentication
 
-As part of our [Knight Foundation grant](https://datproject.org/blog/2016-02-01-announcing-publicbits), we are building a registry for Dat archives. 
+As part of our [Knight Foundation grant](https://datproject.org/blog/2016-02-01-announcing-publicbits), we are building a registry for Dat archives.
 Once registered, you will be able to publish Dat archives from the registry.
 Anyone can clone archives published to the registry without registration:
 
@@ -148,6 +161,14 @@ dat register
 dat login
 dat logout
 dat whoami
+```
+
+Once you are logged in to a server. You can publish a Dat archive:
+
+```
+cd my-data
+dat create
+dat publish
 ```
 
 All take a `server` option along with `username` and `password`.
