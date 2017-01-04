@@ -32,11 +32,47 @@ See the [installation troubleshooting](https://github.com/datproject/dat#trouble
 
 1. `cd my-files-to-share` - go to the directory that you want to share
 2. `dat create` - create a Dat archive and import the files from the folder
+
+```
+dat create
+Dat Archive initialized: /path/to/my-files-to-share
+Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
+
+File import finished!
+Total Size: 50 files (40.5 MB)
+```
+
 3. `dat sync` - share the files over the Dat network
+
+```
+dat-next sync
+Syncing Dat Archive: /path/to/my-files-to-share
+Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
+
+Archive update finished! Sharing latest files.
+Total Size: 50 files (40.5 MB)
+
+Looking for connections in Dat Network...
+```
 
 #### Downloading Files
 
-1. `dat clone dat://<dat-hash> download-folder` - Clones all the files from a remote Dat archive.
+Once the files are shared somewhere, you can clone them to another location:
+
+1. `dat clone dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151 download-folder` - Clones all the files from the shared Dat archive.
+
+```
+dat clone dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151 download-folder
+Cloning Dat Archive: /path/to/download-folder
+Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
+
+Metadata: [==================================================>] 100%
+Content:  [====================>------------------------------] 41%
+Total size: 50 files (40.5 MB)
+
+1 peer on the Dat Network
+Downloading: 5.6 MB/s
+```
 
 ##### Downloading Updates
 
@@ -44,6 +80,16 @@ After you clone a Dat archive, you can update the files later:
 
 1. `cd download-folder`
 2. `dat pull` - download updates and exit
+
+```
+dat-next pull
+Pulling Dat Archive: /path/to/download-folder
+Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
+
+
+Download Finished!
+Total size: 50 files (40.5 MB)
+```
 
 ### Demo File Download
 
@@ -154,7 +200,7 @@ dat clone karissa/more-tweets-more-votes
 ### Auth (experimental)
 
 Other auth commands are still in an experimental status.
-New registrations on dat.land are currently limited.
+New registrations on the Dat archive registry are currently limited.
 
 ```
 dat register
@@ -171,9 +217,26 @@ dat create
 dat publish
 ```
 
-All take a `server` option along with `username` and `password`.
+All authentication and publishing requests take the `--server` option.
+You can deploy your own compatible [registry server](https://github.com/datproject/datfolder) if you'd rather use your our service.
 
-## Development
+## For Developers
+
+This command line library uses [dat-node](https://github.com/datproject/dat-node) to create and manage the archives and networking.
+If you'd like to build your own Dat application that is compatible with this command line tool, we suggest using dat-node.
+
+
+### Installing from source
+
+Clone this repository and in a terminal inside of the folder you cloned run this command:
+
+```
+npm link
+```
+
+This should add a `dat` command line command to your PATH. Now you can run the dat command to try it out.
+
+The contribution guide also has more tips on our [development workflow](https://github.com/datproject/dat/blob/master/CONTRIBUTING.md#development-workflow).
 
 * `npm run test` to run tests
 * `npm run auth-server` to run a local auth server for testing
