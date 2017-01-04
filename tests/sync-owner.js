@@ -56,15 +56,10 @@ test('sync-owner - default opts', function (t) {
     var sharing = output.indexOf('Dat Network') > -1
     if (!sharing) return false
 
-    var fileRe = new RegExp('3 files')
-    var bytesRe = new RegExp(/1\.\d{1,2} kB/)
-
     key = help.matchLink(output)
 
     t.ok(key, 'prints link')
     t.ok(output.indexOf('tests/fixtures') > -1, 'prints dir')
-    t.ok(output.match(fileRe), 'total size: files okay')
-    t.ok(output.match(bytesRe), 'total size: bytes okay')
 
     downloadDat()
     return true
