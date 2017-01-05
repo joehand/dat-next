@@ -102,7 +102,7 @@ After you clone a Dat archive, you can update the files later:
 * `dat pull` - download updates and exit
 
 ```
-dat-next pull
+dat pull
 Pulling Dat Archive: /path/to/download-folder
 Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
 
@@ -132,7 +132,7 @@ If the source files are updated you can run `dat pull` or `dat sync` inside the 
 
 ```
 cd datproject-website
-dat-next pull
+dat pull
 ```
 
 `dat sync` will do the same thing but keeps running until you stop it.
@@ -153,7 +153,7 @@ Once a Dat is created, you can run all the commands inside that folder, similar 
 #### Creating a Dat archive
 
 ```
-dat-next create [--dir=<folder>] [--no-import]
+dat create [--dir=<folder>] [--no-import]
 ```
 
 Create a new Dat Archive in the current directory (or specify `--dir`).
@@ -161,7 +161,7 @@ Will automatically import the files in that directory to the archive.
 
 
 ```
-dat-next sync [--dir=<folder>] [--no-import]
+dat sync [--dir=<folder>] [--no-import]
 ```
 
 Start sharing your Dat Archive over the network.
@@ -171,7 +171,7 @@ Sync will import new or updated files since you ran `create` or `sync` last.
 #### Snapshot
 
 ```
-dat-next snapshot [--dir=<folder>]
+dat snapshot [--dir=<folder>]
 ```
 
 Snapshot will create the archive in snapshot, `{live: false}`, mode.
@@ -180,7 +180,7 @@ Snapshot will create the archive in snapshot, `{live: false}`, mode.
 ### Downloading
 
 ```
-dat-next clone <dat-link> [<folder>] [--temp]
+dat clone <dat-link> [<folder>] [--temp]
 ```
 
 Clone a remote Dat Archive to a local folder.
@@ -195,13 +195,13 @@ Will create a folder with the key name is no folder is specified.
 Once a Dat is clone, you can run either `dat pull` or `dat sync` in the folder to update the archive.
 
 ```
-dat-next pull [--dir=<folder>]
+dat pull [--dir=<folder>]
 ```
 
 Update a cloned Dat Archive to latest files and exit.
 
 ```
-dat-next sync [--dir=<folder>]
+dat sync [--dir=<folder>]
 ```
 
 Download latest files and keep connection open to continue updating as remote source is updated.
