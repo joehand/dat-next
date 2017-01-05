@@ -2,6 +2,8 @@
 
 [![Travis](https://img.shields.io/travis/joehand/dat-next.svg?style=flat-square&branch=master)](https://travis-ci.org/joehand/dat-next) [![npm](https://img.shields.io/npm/v/dat-next.svg?style=flat-square)](https://npmjs.org/package/dat-next)
 
+[<img src="http://datproject.github.io/design/downloads/dat-data-logo.png" align="right" width="140">](https://datproject.org)
+
 Dat syncs data and files across the distributed web. Dat is optimized for speed, simplicity, and security. Read more at [datproject.org](https://datproject.org/).
 
 This repository is the new version of the command line tool for Dat.
