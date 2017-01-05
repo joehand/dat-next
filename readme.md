@@ -30,8 +30,8 @@ See the [installation troubleshooting](https://github.com/datproject/dat#trouble
 
 #### Sharing Files
 
-1. `cd my-files-to-share` - go to the directory that you want to share
-2. `dat create` - create a Dat archive and import the files from the folder
+* `cd my-files-to-share` - change to the folder to share
+* `dat create` - create a Dat archive and import the files from the folder
 
 ```
 dat create
@@ -42,7 +42,9 @@ File import finished!
 Total Size: 50 files (40.5 MB)
 ```
 
-3. `dat sync` - share the files over the Dat network
+Now you should have a `.dat` folder inside `my-files-to-share`. Once the dat is created, you can start sharing it over the p2p network:
+
+* `dat sync` - share the files over the Dat network
 
 ```
 dat-next sync
@@ -59,7 +61,7 @@ Looking for connections in Dat Network...
 
 Once the files are shared somewhere, you can clone them to another location:
 
-1. `dat clone dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151 download-folder` - Clones all the files from the shared Dat archive.
+* `dat clone dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151 download-folder` - Clones all the files from the shared Dat archive.
 
 ```
 dat clone dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151 download-folder
@@ -78,8 +80,8 @@ Downloading: 5.6 MB/s
 
 After you clone a Dat archive, you can update the files later:
 
-1. `cd download-folder`
-2. `dat pull` - download updates and exit
+* `cd download-folder`
+* `dat pull` - download updates and exit
 
 ```
 dat-next pull
