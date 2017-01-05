@@ -2,12 +2,24 @@
 
 [![Travis](https://img.shields.io/travis/joehand/dat-next.svg?style=flat-square&branch=master)](https://travis-ci.org/joehand/dat-next) [![npm](https://img.shields.io/npm/v/dat-next.svg?style=flat-square)](https://npmjs.org/package/dat-next)
 
+Dat syncs data and files across the distributed web. Dat is optimized for speed, simplicity, and security. Read more at [datproject.org](https://datproject.org/).
+
+This repository is the new version of the command line tool for Dat.
+
+If you have questions you can chat with us in IRC on [#dat](http://webchat.freenode.net/?channels=dat) or [Gitter](https://gitter.im/datproject/discussions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge).
+
+### Features
+
+* *Share files*: Send files to colleagues, other computers, or servers to synchronize across devices and backup.
+* *Clone Dat archives*: Download and live sync Dat archives published by anyone.
+* *Publish*: Make it easy to clone datasets by publishing a Dat link to the Dat registry.
+
 ### Development Status
 
-**dat-next** is the next version of the Dat command line interface, to replace [datproject/dat](https://github.com/datproject/dat).
+**dat-next** is the new version of the Dat command line interface, to replace [datproject/dat](https://github.com/datproject/dat).
 
-Version 2.x.x will be released on dat-next as a beta test.
-After user testing, we will move development and releases to datproject/dat.
+`dat-next` Version 2.x.x will be released on dat-next as a beta test.
+After user testing and stability improvements, we will move development and releases to datproject/dat.
 
 ## Getting Started
 
@@ -20,6 +32,8 @@ Install via npm:
 ```
 npm install -g dat-next
 ```
+
+**Note: if you previously installed dat with `npm install -g dat`, this will overwrite the old `dat` command.**
 
 You can make sure the install worked by running the `dat` command.
 The usage guide should print.
@@ -118,17 +132,16 @@ dat-next pull
 ```
 
 `dat sync` will do the same thing but keeps running until you stop it.
-Pull will update the files and exit.
+`dat pull` will update the files and exit.
 
 ## Usage
 
-Dat archives currently have a one to many relationship, there is a single source that can create and write files and many peers that can download the files *(in future versions there may be several sources)*.
+Dat archives have a one to many relationship, there is a single source that can create and write files and many peers that can download the files *(in future versions there may be several sources)*.
 
 * **Sharing**: If you want to share files from your computer that you will update, you are the *source archive* or *local archive*.
 * **Downloading**: If your colleague has files they want to share, they will be the source and you'll be downloading from a *remote archive*.
 
-The first commands, *init* or *clone*, will make a Dat archive folder.
-This creates a `.dat` folder where the Dat metadata is stored.
+The first commands, *init* or *clone*, creates a `.dat` folder where the Dat metadata is stored.
 Once a Dat is created, you can run all the commands inside that folder, similar to git.
 
 ### Sharing
@@ -157,7 +170,7 @@ Sync will import new or updated files since you ran `create` or `sync` last.
 dat-next snapshot [--dir=<folder>]
 ```
 
-Snapshot will create the archive in snapshot, `{live: false}` mode.
+Snapshot will create the archive in snapshot, `{live: false}`, mode.
 
 
 ### Downloading
@@ -220,13 +233,12 @@ dat publish
 ```
 
 All authentication and publishing requests take the `--server` option.
-You can deploy your own compatible [registry server](https://github.com/datproject/datfolder) if you'd rather use your our service.
+You can deploy your own compatible [registry server](https://github.com/datproject/datfolder) if you'd rather use your own service.
 
 ## For Developers
 
 This command line library uses [dat-node](https://github.com/datproject/dat-node) to create and manage the archives and networking.
 If you'd like to build your own Dat application that is compatible with this command line tool, we suggest using dat-node.
-
 
 ### Installing from source
 
