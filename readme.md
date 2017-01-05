@@ -23,6 +23,8 @@ If you have questions you can chat with us in IRC on [#dat](http://webchat.freen
 `dat-next` Version 2.x.x will be released on dat-next as a beta test.
 After user testing and stability improvements, we will move development and releases to datproject/dat.
 
+**Upgrading from the old Dat command line tool? [See what the changes are](#upgrading).**
+
 ## Getting Started
 
 The dat-next command line tool can be used to share, download, and sync files across many computers via the command line.
@@ -204,7 +206,7 @@ dat-next sync [--dir=<folder>]
 
 Download latest files and keep connection open to continue updating as remote source is updated.
 
-## Dat Registry and Authentication
+### Dat Registry and Authentication
 
 As part of our [Knight Foundation grant](https://datproject.org/blog/2016-02-01-announcing-publicbits), we are building a registry for Dat archives.
 Once registered, you will be able to publish Dat archives from the registry.
@@ -214,7 +216,7 @@ Anyone can clone archives published to the registry without registration:
 dat clone karissa/more-tweets-more-votes
 ```
 
-### Auth (experimental)
+#### Auth (experimental)
 
 Other auth commands are still in an experimental status.
 New registrations on the Dat archive registry are currently limited.
@@ -236,6 +238,49 @@ dat publish
 
 All authentication and publishing requests take the `--server` option.
 You can deploy your own compatible [registry server](https://github.com/datproject/datfolder) if you'd rather use your own service.
+
+### Upgrading
+
+If you are familiar with the old Dat CLI, there will only be minor changes to use dat-next.
+
+To share files with Dat, you'll need two commands now instead of one.
+
+```
+cd my-folder
+dat create
+dat sync
+```
+
+After the Dat archive is created, you can run `dat sync` in the folder to share updates or use the same command as the old dat: `dat my-folder`.
+
+To download files, you can use `dat clone` which will do the same thing as `dat <link>` did before:
+
+```
+dat clone dat://<link> download-folder
+```
+
+Once the initial download is complete, you can use `dat pull` inside to folder to update or use the same command as the old dat: `dat download-folder`.
+
+### Compatibility
+
+All archives created previously will still work with dat-next.
+
+#### Shared a folder with the old Dat?
+
+With `dat-next` you can still run `dat path/to/my-folder`.
+This is a shortcut for `dat sync path/to/my-folder`, which will connect to the network and import new and updated files.
+
+#### Downloaded a folder with the old Dat?
+
+With `dat-next` you can still run `dat path/to/my-folder`.
+This is a shortcut for `dat sync path/to/my-folder`, which will connect to the network and download updates.
+
+You can also use `dat pull` to update files and exit:
+
+```
+cd path/to/my-folder
+dat pull
+```
 
 ## For Developers
 
