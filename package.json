@@ -1,9 +1,9 @@
 {
   "name": "dat-next",
   "version": "1.0.0",
-  "description": "experimental dat cli client",
+  "description": "Next version of the Dat CLI client",
   "bin": {
-    "dat-next": "bin/cli.js"
+    "dat": "bin/cli.js"
   },
   "scripts": {
     "auth-server": "DEBUG=* node scripts/auth-server.js",
