@@ -148,8 +148,9 @@ test('clone - dat.land link', function (t) {
 
 test('close sharer', function (t) {
   shareDat.close(function () {
-    rimraf.sync(path.join(shareDat.path, '.dat'))
-    t.end()
+    rimraf(path.join(shareDat.path, '.dat'), function () {
+      t.end()
+    })
   })
 })
 

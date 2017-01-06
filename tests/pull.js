@@ -22,7 +22,7 @@ test('pull - errors without clone first', function (t) {
   st.end()
 })
 
-test('clone - so we can pull', function (t) {
+test('pull - clone so we can pull', function (t) {
   // cmd: dat clone <link>
   // import false so we can pull files later
   help.shareFixtures({import: false}, function (_, fixturesDat) {
