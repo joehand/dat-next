@@ -62,7 +62,6 @@ test('clone - errors on existing dir', function (t) {
     st.kill()
     return true
   })
-  st.stdout.empty()
   st.end()
 })
 
