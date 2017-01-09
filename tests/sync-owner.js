@@ -129,7 +129,7 @@ test('sync-owner - turn off ignore hidden', function (t) {
   // cmd: dat sync
   var hiddenFile = path.join(fixtures, '.hidden-file')
   var cmd = dat + ' sync --no-ignore-hidden'
-  fs.writeFile(hiddenFile, 'You cannot see me', function(err) {
+  fs.writeFile(hiddenFile, 'You cannot see me', function (err) {
     t.error(err)
 
     var st = spawn(t, cmd, {cwd: fixtures, end: false})
@@ -159,6 +159,7 @@ test('sync-owner - turn off ignore hidden', function (t) {
 
         downDat.network.swarm.once('connection', function () {
           downDat.archive.list({live: false}, function (err, data) {
+            t.error(err)
             var hasHiddenFile = data.filter(function (entry) {
               return entry.name === '.hidden-file'
             })
