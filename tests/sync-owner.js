@@ -125,6 +125,60 @@ test('sync-owner - imports after no-import create', function (t) {
   st.end()
 })
 
+test('sync-owner - turn off ignore hidden', function (t) {
+  // cmd: dat sync
+  var hiddenFile = path.join(fixtures, '.hidden-file')
+  var cmd = dat + ' sync --no-ignore-hidden'
+  fs.writeFile(hiddenFile, 'You cannot see me', function(err) {
+    t.error(err)
+
+    var st = spawn(t, cmd, {cwd: fixtures, end: false})
+    var key
+
+    st.stdout.match(function (output) {
+      var sharing = output.indexOf('Dat Network') > -1
+      if (!sharing) return false
+
+      key = help.matchLink(output)
+
+      downloadDat()
+      return true
+    })
+    st.stderr.empty()
+    st.end()
+
+    function downloadDat () {
+      var downloadDir = path.join(help.testFolder(), '' + Date.now())
+      mkdirp.sync(downloadDir)
+
+      Dat(downloadDir, { key: key }, function (err, tmpDat) {
+        if (err) throw err
+
+        downDat = tmpDat
+        downDat.joinNetwork()
+
+        downDat.network.swarm.once('connection', function () {
+          downDat.archive.list({live: false}, function (err, data) {
+            var hasHiddenFile = data.filter(function (entry) {
+              return entry.name === '.hidden-file'
+            })
+            t.ok(hasHiddenFile.length, 'hidden file in archive')
+            downDat.network.swarm.close(function () {
+              downDat.close(function () {
+                rimraf(downDat.path, function () {
+                  fs.unlink(hiddenFile, function () {
+                    t.end()
+                  })
+                })
+              })
+            })
+          })
+        })
+      })
+    }
+  })
+})
+
 test('sync-owner - port and utp options', function (t) {
   var port = 3281
   var cmd = dat + ' sync --port ' + port + ' --no-utp'
