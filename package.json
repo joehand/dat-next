@@ -25,6 +25,7 @@
     "dat-node": "^1.1.1",
     "debug": "^2.4.5",
     "hyperdrive": "^7.12.2",
+    "hyperdrive-count-import": "^1.0.2",
     "hyperdrive-network-speed": "^1.1.0",
     "memdb": "^1.3.1",
     "nets": "^3.2.0",
