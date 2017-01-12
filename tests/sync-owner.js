@@ -110,7 +110,7 @@ test('sync-owner - imports after no-import create', function (t) {
     var sharing = output.indexOf('Sharing latest') > -1
     if (!sharing) return false
 
-    var fileRe = new RegExp('3 files')
+    var fileRe = new RegExp('2 files')
     var bytesRe = new RegExp(/1\.\d{1,2} kB/)
 
     t.ok(help.matchLink(output), 'prints link')
