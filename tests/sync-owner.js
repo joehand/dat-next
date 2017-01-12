@@ -9,6 +9,7 @@ var spawn = require('./helpers/spawn.js')
 var help = require('./helpers')
 
 var dat = path.resolve(path.join(__dirname, '..', 'bin', 'cli.js'))
+if (process.env.TRAVIS) dat += ' --no-watch '
 var fixtures = path.join(__dirname, 'fixtures')
 var downDat
 
@@ -107,7 +108,7 @@ test('sync-owner - imports after no-import create', function (t) {
   var st = spawn(t, cmd, {cwd: fixtures})
 
   st.stdout.match(function (output) {
-    var sharing = output.indexOf('Sharing latest') > -1
+    var sharing = output.indexOf('Looking for connections') > -1
     if (!sharing) return false
 
     var fileRe = new RegExp('2 files')
@@ -216,7 +217,7 @@ test('sync-owner - shorthand', function (t) {
   var st = spawn(t, cmd, {cwd: fixtures})
 
   st.stdout.match(function (output) {
-    var sharing = output.indexOf('Sharing latest') > -1
+    var sharing = output.indexOf('Looking for connections') > -1
     if (!sharing) return false
 
     t.ok(help.matchLink(output), 'prints link')
