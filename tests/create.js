@@ -49,7 +49,6 @@ test('create - errors on existing archive', function (t) {
   var cmd = dat + ' create'
   var st = spawn(t, cmd, {cwd: fixtures})
 
-  st.stdout.empty()
   st.stderr.match(function (output) {
     t.ok(output.indexOf('cannot overwrite') > -1, 'cannot overwrite error')
     st.kill()
@@ -63,7 +62,6 @@ test('pull - pull fails on created archive', function (t) {
   var cmd = dat + ' pull'
   var st = spawn(t, cmd, {cwd: fixtures})
 
-  st.stdout.empty()
   st.stderr.match(function (output) {
     t.ok(output.indexOf('Cannot pull an archive that you own.') > -1, 'cannot pull on create error')
     st.kill()
