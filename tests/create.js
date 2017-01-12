@@ -120,6 +120,22 @@ test('create - init alias okay', function (t) {
   st.end()
 })
 
+test('create - with path', function (t) {
+  rimraf.sync(path.join(fixtures, '.dat'))
+  var cmd = dat + ' create ' + fixtures
+  var st = spawn(t, cmd)
+
+  st.stderr.empty()
+  st.stdout.match(function (output) {
+    var importFinished = output.indexOf('import finished') > -1
+    if (!importFinished) return false
+    t.ok(output.indexOf('dat-next/tests/fixtures'), 'prints correct dir')
+    st.kill()
+    return true
+  })
+  st.end()
+})
+
 test.onFinish(function () {
   rimraf.sync(path.join(fixtures, '.dat'))
 })
