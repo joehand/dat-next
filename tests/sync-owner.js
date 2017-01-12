@@ -151,10 +151,9 @@ test('sync-owner - turn off ignore hidden', function (t) {
       var downloadDir = path.join(help.testFolder(), '' + Date.now())
       mkdirp.sync(downloadDir)
 
-      Dat(downloadDir, { key: key }, function (err, tmpDat) {
+      Dat(downloadDir, { key: key }, function (err, downDat) {
         if (err) throw err
 
-        downDat = tmpDat
         downDat.joinNetwork()
 
         downDat.network.swarm.once('connection', function () {
@@ -165,10 +164,12 @@ test('sync-owner - turn off ignore hidden', function (t) {
             })
             t.ok(hasHiddenFile.length, 'hidden file in archive')
             downDat.network.swarm.close(function () {
-              downDat.close(function () {
-                rimraf(downDat.path, function () {
-                  fs.unlink(hiddenFile, function () {
-                    t.end()
+              process.nextTick(function () {
+                downDat.close(function () {
+                  rimraf(downDat.path, function () {
+                    fs.unlink(hiddenFile, function () {
+                      t.end()
+                    })
                   })
                 })
               })
