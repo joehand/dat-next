@@ -229,6 +229,36 @@ test('sync-owner - shorthand', function (t) {
   st.end()
 })
 
+if (!process.env.TRAVIS) {
+  test('sync-owner - live', function (t) {
+    var liveFile = path.join(fixtures, 'live.txt')
+    var wroteFile = false
+
+    var cmd = dat + ' sync --watch'
+    var st = spawn(t, cmd, {cwd: fixtures})
+
+    st.stdout.match(function (output) {
+      var watching = output.indexOf('Watching for file changes') > -1
+      if (!watching) return false
+      else if (!wroteFile) {
+        fs.writeFileSync(liveFile, 'hello')
+        wroteFile = true
+      }
+      var fileImported = output.indexOf('live.txt') > -1
+      if (!fileImported) return false
+
+      t.ok(fileImported, 'prints live file output')
+      t.ok(output.indexOf('3 files') > -1, 'total size: files okay')
+
+      fs.unlinkSync(liveFile)
+      st.kill()
+      return true
+    })
+    st.stderr.empty()
+    st.end()
+  })
+}
+
 test.onFinish(function () {
   rimraf.sync(path.join(fixtures, '.dat'))
 })
