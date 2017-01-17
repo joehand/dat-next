@@ -108,7 +108,8 @@ test('sync-owner - imports after no-import create', function (t) {
   var st = spawn(t, cmd, {cwd: fixtures})
 
   st.stdout.match(function (output) {
-    var sharing = output.indexOf('Looking for connections') > -1
+    // have to check both for local test (watching) and travis (sharing)
+    var sharing = output.indexOf('Watching') > -1 || output.indexOf('Sharing latest') > -1
     if (!sharing) return false
 
     var fileRe = new RegExp('2 files')
