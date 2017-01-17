@@ -69,11 +69,13 @@ dat-next sync
 Syncing Dat Archive: /path/to/my-files-to-share
 Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
 
-Archive update finished! Sharing latest files.
+Watching files for changes...
 Total Size: 50 files (40.5 MB)
 
 Looking for connections in Dat Network...
 ```
+
+The `sync` command will also watch your directory for changes and share any updated files.
 
 #### Downloading Files
 
@@ -161,12 +163,15 @@ Will automatically import the files in that directory to the archive.
 
 
 ```
-dat sync [--dir=<folder>] [--no-import]
+dat sync [--dir=<folder>] [--no-import] [--no-watch]
 ```
 
 Start sharing your Dat Archive over the network.
 Sync will import new or updated files since you ran `create` or `sync` last.
+Sync watched files for changes and imports updated files.
 
+* Use `--no-import` to not import any new or updated files.
+* Use `--no-watch` to not watch directory for changes. `--import` must be true for `--watch` to work.
 
 #### Snapshot
 
