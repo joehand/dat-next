@@ -112,7 +112,9 @@ authServer(port, function (err, server, closeServer) {
     var cmd = dat + ' clone ' + shortName
     var st = spawn(t, cmd, {cwd: baseDir})
     st.stdout.match(function (output) {
-      t.ok(output.indexOf('Looking for') > -1, 'starts looking for peers')
+      var lookingFor = output.indexOf('Looking for') > -1
+      if (!lookingFor) return false
+      t.ok(lookingFor, 'starts looking for peers')
       t.ok(output.indexOf(downloadDir) > -1, 'prints dir')
       st.kill()
       return true

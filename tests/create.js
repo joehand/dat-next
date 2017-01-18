@@ -76,7 +76,7 @@ test('create - sync after create ok', function (t) {
   var st = spawn(t, cmd, {cwd: fixtures})
 
   st.stdout.match(function (output) {
-    var connected = output.indexOf('Sharing latest') > -1
+    var connected = output.indexOf('Looking for connections') > -1
     if (!connected) return false
     t.ok('Dat Network', 'Shares over dat network')
     st.kill()
