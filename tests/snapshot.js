@@ -30,7 +30,6 @@ test('snapshot - default opts', function (t) {
     t.ok(output.indexOf('tests/fixtures') > -1, 'prints dir')
     t.ok(output.match(fileRe), 'total size: files okay')
     t.ok(output.match(bytesRe), 'total size: bytes okay')
-
     st.kill()
     return true
   })

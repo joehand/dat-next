@@ -34,7 +34,7 @@ test('sync-owner - errors without create first', function (t) {
 test('sync-owner - create a dat for syncing', function (t) {
   rimraf.sync(path.join(fixtures, '.dat'))
   // cmd: dat create
-  var cmd = dat + ' create'
+  var cmd = dat + ' create --import'
   var st = spawn(t, cmd, {cwd: fixtures})
   st.stdout.match(function (output) {
     var importFinished = output.indexOf('import finished') > -1
@@ -92,10 +92,10 @@ test('sync-owner - default opts', function (t) {
 test('sync-owner - create without import for syncing', function (t) {
   rimraf.sync(path.join(fixtures, '.dat'))
   // cmd: dat create
-  var cmd = dat + ' create --no-import'
+  var cmd = dat + ' create'
   var st = spawn(t, cmd, {cwd: fixtures})
   st.stdout.match(function (output) {
-    if (output.indexOf('Archive initialized') > -1) return true
+    if (output.indexOf('created') > -1) return true
     return false
   })
   st.succeeds()
