@@ -34,6 +34,7 @@ var config = {
     require('../lib/commands/doctor'),
     require('../lib/commands/publish'),
     require('../lib/commands/pull'),
+    require('../lib/commands/share'),
     require('../lib/commands/snapshot'),
     require('../lib/commands/sync'),
     require('../lib/commands/auth/register'),

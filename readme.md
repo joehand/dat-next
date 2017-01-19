@@ -152,6 +152,22 @@ Once a Dat is created, you can run all the commands inside that folder, similar 
 
 ### Sharing
 
+The quickest way to get started sharing files is to `share`:
+
+```
+> dat share
+
+Syncing Dat Archive: /Users/joe/Desktop/datproject-website
+Link: dat://b44a53f3dcad90349ba743e21fca4869cd3fb79d9f8b55a556af04e5ad49bb79
+
+Archive update finished! Sharing latest files.
+Total Size: 51 files (3.23 MB)
+
+Looking for connections in Dat Network...
+```
+
+You can also do `create` and `sync` in separate steps if you'd like more control over the importing.
+
 #### Creating a Dat archive
 
 ```
@@ -161,6 +177,7 @@ dat create [--dir=<folder>] [--no-import]
 Create a new Dat Archive in the current directory (or specify `--dir`).
 Will automatically import the files in that directory to the archive.
 
+#### Syncing to Network
 
 ```
 dat sync [--dir=<folder>] [--no-import] [--no-watch]
