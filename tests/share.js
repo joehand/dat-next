@@ -6,6 +6,7 @@ var spawn = require('./helpers/spawn.js')
 var help = require('./helpers')
 
 var dat = path.resolve(path.join(__dirname, '..', 'bin', 'cli.js'))
+if (process.env.TRAVIS) dat += ' --no-watch '
 var fixtures = path.join(__dirname, 'fixtures')
 
 // os x adds this if you view the fixtures in finder and breaks the file count assertions
@@ -20,7 +21,7 @@ test('share - default opts', function (t) {
   var st = spawn(t, cmd, {cwd: fixtures})
 
   st.stdout.match(function (output) {
-    var importFinished = output.indexOf('Sharing latest files') > -1
+    var importFinished = output.indexOf('Total Size') > -1
     if (!importFinished) return false
 
     t.ok(help.isDir(path.join(fixtures, '.dat')), 'creates dat directory')
