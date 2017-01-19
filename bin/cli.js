@@ -8,13 +8,12 @@ process.title = 'dat-next'
 
 var config = {
   defaults: [
-    { name: 'dir', default: process.cwd() },
+    { name: 'dir', default: process.cwd(), help: 'set the directory for Dat' },
     { name: 'logspeed', default: 200 },
-    { name: 'port', default: 3282 },
-    { name: 'utp', default: true, boolean: true },
-    { name: 'debug', default: process.env.DEBUG },
+    { name: 'port', default: 3282, help: 'port to use for connections' },
+    { name: 'utp', default: true, boolean: true, help: 'use utp for discovery' },
+    { name: 'debug', default: process.env.DEBUG }, // TODO: does not work right now
     { name: 'quiet', default: false, boolean: true },
-    { name: 'verbose', default: false, boolean: true, abbr: 'v' },
     { name: 'server', default: 'https://dat.land/api/v1' }
   ],
   root: {
@@ -40,12 +39,15 @@ var config = {
     require('../lib/commands/auth/register'),
     require('../lib/commands/auth/whoami'),
     require('../lib/commands/auth/logout'),
-    require('../lib/commands/auth/login'),
-    {
-      name: 'help',
-      command: usage
-    }
+    require('../lib/commands/auth/login')
   ],
+  usage: {
+    command: usage,
+    option: {
+      name: 'help',
+      abbr: 'h'
+    }
+  },
   aliases: {
     'init': 'create'
   }
