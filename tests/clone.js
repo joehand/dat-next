@@ -231,6 +231,45 @@ test('clone - invalid link', function (t) {
   st.end()
 })
 
+test('clone - stateless clone `dat <link> {dir}`', function (t) {
+  var key = shareDat.key.toString('hex')
+  var customDir = 'stateless-dir'
+  var cmd = dat + ' ' + key + ' ' + customDir
+  var st = spawn(t, cmd, {cwd: baseTestDir})
+  st.stdout.match(function (output) {
+    var downloadFinished = output.indexOf('Files updated to latest') > -1
+    if (!downloadFinished) return false
+
+    t.ok(output.indexOf('dat-download-folder/' + customDir) > -1, 'prints dir')
+    t.ok(help.isDir(path.join(baseTestDir, customDir)), 'creates download directory')
+
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end()
+})
+
+test('clone - resume stateless clone `dat <link> {dir}`', function (t) {
+  // same thing as above, with existing dir
+  var key = shareDat.key.toString('hex')
+  var customDir = 'stateless-dir'
+  var cmd = dat + ' ' + key + ' ' + customDir
+  var st = spawn(t, cmd, {cwd: baseTestDir})
+  st.stdout.match(function (output) {
+    var downloadFinished = output.indexOf('Files updated to latest') > -1
+    if (!downloadFinished) return false
+
+    t.ok(output.indexOf('dat-download-folder/' + customDir) > -1, 'prints dir')
+    t.ok(help.isDir(path.join(baseTestDir, customDir)), 'creates download directory')
+
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end()
+})
+
 test('close sharer', function (t) {
   shareDat.close(function () {
     rimraf.sync(path.join(shareDat.path, '.dat'))

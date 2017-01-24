@@ -89,7 +89,6 @@ test('sync-remote - dir arg', function (t) {
   st.end()
 })
 
-
 test('close sharer', function (t) {
   shareDat.close(function () {
     rimraf.sync(path.join(shareDat.path, '.dat'))

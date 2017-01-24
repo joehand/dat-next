@@ -85,7 +85,6 @@ test('pull - default opts', function (t) {
   })
 })
 
-
 test('pull - with dir arg', function (t) {
   var dirName = shareKey
   var datDir = path.join(baseTestDir, shareKey)
