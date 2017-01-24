@@ -68,7 +68,7 @@ function alias (argv) {
 }
 
 function syncShorthand (opts) {
-  if (!opts._.length) return done ()
+  if (!opts._.length) return done()
   debug('Sync shortcut command')
   debug(opts)
 
@@ -84,7 +84,7 @@ function syncShorthand (opts) {
       mkdirp(opts.dir, function () {
         require('../lib/download')('sync', opts)
       })
-    } catch (e) { return done ()}
+    } catch (e) { return done() }
   } else {
     try {
       debug('Share sync')
@@ -96,7 +96,7 @@ function syncShorthand (opts) {
         opts.import = opts.import || true // TODO: use default opts in sync
         sync.command(opts)
       })
-    } catch (e) { return done ()}
+    } catch (e) { return done() }
   }
 
   function done () {
