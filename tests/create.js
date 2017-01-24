@@ -70,7 +70,7 @@ test('create - errors on existing archive', function (t) {
   var st = spawn(t, cmd, {cwd: fixtures})
 
   st.stderr.match(function (output) {
-    t.ok(output.indexOf('cannot overwrite') > -1, 'cannot overwrite error')
+    t.ok(output.indexOf('Archive already exists') > -1, 'already exists error')
     st.kill()
     return true
   })
