@@ -75,6 +75,20 @@ test('sync-remote - shorthand sync', function (t) {
   st.end()
 })
 
+test('sync-remote - dir arg', function (t) {
+  var cmd = dat + ' ' + syncDir
+  var st = spawn(t, cmd)
+  st.stdout.match(function (output) {
+    var syncing = output.indexOf('Syncing Dat Archive') > -1
+    if (!syncing) return false
+    t.ok(help.matchLink(output), 'prints link')
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end()
+})
+
 test('close sharer', function (t) {
   shareDat.close(function () {
     rimraf.sync(path.join(shareDat.path, '.dat'))

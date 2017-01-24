@@ -230,6 +230,23 @@ test('sync-owner - shorthand', function (t) {
   st.end()
 })
 
+test('sync-owner - dir argument', function (t) {
+  var cmd = dat + ' sync ' + fixtures
+  var st = spawn(t, cmd)
+
+  st.stdout.match(function (output) {
+    var sharing = output.indexOf('Looking for connections') > -1
+    if (!sharing) return false
+
+    t.ok(help.matchLink(output), 'prints link')
+
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end()
+})
+
 if (!process.env.TRAVIS) {
   test('sync-owner - live', function (t) {
     var liveFile = path.join(fixtures, 'live.txt')

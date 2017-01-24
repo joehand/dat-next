@@ -171,16 +171,16 @@ You can also do `create` and `sync` in separate steps if you'd like more control
 #### Creating a Dat archive
 
 ```
-dat create [--dir=<folder>] [--no-import]
+dat create [<folder>] [--no-import]
 ```
 
-Create a new Dat Archive in the current directory (or specify `--dir`).
+Create a new Dat Archive in the current directory (or specify `dir`).
 Will automatically import the files in that directory to the archive.
 
 #### Syncing to Network
 
 ```
-dat sync [--dir=<folder>] [--no-import] [--no-watch]
+dat sync [<folder>] [--no-import] [--no-watch]
 ```
 
 Start sharing your Dat Archive over the network.
@@ -193,7 +193,7 @@ Sync watched files for changes and imports updated files.
 #### Snapshot
 
 ```
-dat snapshot [--dir=<folder>]
+dat snapshot [<folder>]
 ```
 
 Snapshot will create the archive in snapshot, `{live: false}`, mode.
@@ -217,16 +217,21 @@ Will create a folder with the key name is no folder is specified.
 Once a Dat is clone, you can run either `dat pull` or `dat sync` in the folder to update the archive.
 
 ```
-dat pull [--dir=<folder>]
+dat pull [<folder>]
 ```
 
 Update a cloned Dat Archive to latest files and exit.
 
 ```
-dat sync [--dir=<folder>]
+dat sync [<folder>]
 ```
 
 Download latest files and keep connection open to continue updating as remote source is updated.
+
+### Shortcut commands
+
+* `dat <link> {dir}` will run `dat clone` for new dats or resume the exiting dat in `dir`
+* `dat {dir}` is the same as running `dat sync {dir}`
 
 ### Dat Registry and Authentication
 

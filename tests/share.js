@@ -34,6 +34,25 @@ test('share - default opts', function (t) {
   st.end()
 })
 
+test('share - with dir arg', function (t) {
+  rimraf.sync(path.join(fixtures, '.dat'))
+  var cmd = dat + ' share ' + fixtures
+  var st = spawn(t, cmd)
+
+  st.stdout.match(function (output) {
+    var importFinished = output.indexOf('Total Size') > -1
+    if (!importFinished) return false
+
+    t.ok(help.isDir(path.join(fixtures, '.dat')), 'creates dat directory')
+    t.ok(output.indexOf('Looking for connections') > -1, 'network')
+
+    st.kill()
+    return true
+  })
+  st.stderr.empty()
+  st.end()
+})
+
 test.onFinish(function () {
   rimraf.sync(path.join(fixtures, '.dat'))
 })
