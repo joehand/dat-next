@@ -14,7 +14,7 @@ var config = {
     { name: 'utp', default: true, boolean: true, help: 'use utp for discovery' },
     { name: 'debug', default: process.env.DEBUG }, // TODO: does not work right now
     { name: 'quiet', default: false, boolean: true },
-    { name: 'server', default: 'https://dat.land/api/v1' }
+    { name: 'server', default: 'https://datproject.org/api/v1' }
   ],
   root: {
     options: [
