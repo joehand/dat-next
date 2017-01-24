@@ -85,6 +85,27 @@ test('pull - default opts', function (t) {
   })
 })
 
+
+test('pull - with dir arg', function (t) {
+  var dirName = shareKey
+  var datDir = path.join(baseTestDir, shareKey)
+  var cmd = dat + ' pull ' + dirName
+  var st = spawn(t, cmd, {cwd: baseTestDir})
+  st.stdout.match(function (output) {
+    var downloadFinished = output.indexOf('Download Finished') > -1
+    if (!downloadFinished) return false
+
+    t.ok(output.indexOf('dat-download-folder/' + dirName) > -1, 'prints dir')
+    t.ok(help.isDir(datDir), 'creates download directory')
+
+    st.kill()
+    return true
+  })
+  st.succeeds('exits after finishing download')
+  st.stderr.empty()
+  st.end()
+})
+
 test('close sharer', function (t) {
   shareDat.close(function () {
     rimraf.sync(path.join(shareDat.path, '.dat'))
