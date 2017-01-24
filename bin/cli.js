@@ -73,7 +73,7 @@ function syncShorthand (opts) {
   debug(opts)
 
   if (opts._.length > 1) {
-    // dat <link> {dir}
+    // dat <link> {dir} - clone/resume <link> in {dir}
     try {
       debug('Clone sync')
       opts.key = encoding.toStr(opts._[0])
@@ -86,15 +86,17 @@ function syncShorthand (opts) {
       })
     } catch (e) { return done() }
   } else {
+    // dat {dir} - sync existing dat in {dir}
     try {
       debug('Share sync')
       opts.dir = opts._[0]
       fs.stat(opts.dir, function (err, stat) {
         if (err || !stat.isDirectory()) return usage(opts)
 
-        var sync = require('../lib/commands/sync')
-        opts.import = opts.import || true // TODO: use default opts in sync
-        sync.command(opts)
+        // Set default opts. TODO: use default opts in sync
+        opts.watch = opts.watch || true
+        opts.import = opts.import || true
+        require('../lib/commands/sync').command(opts)
       })
     } catch (e) { return done() }
   }
