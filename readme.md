@@ -231,11 +231,12 @@ Download latest files and keep connection open to continue updating as remote so
 ### Dat Registry and Authentication
 
 As part of our [Knight Foundation grant](https://datproject.org/blog/2016-02-01-announcing-publicbits), we are building a registry for Dat archives.
-Once registered, you will be able to publish Dat archives from the registry.
-Anyone can clone archives published to the registry without registration:
+We will be running a Dat registry at datproject.org, but anyone will be able to create their own.
+Once registered, you will be able to publish Dat archives from our registry.
+Anyone can clone archives published to a registry without registration:
 
 ```
-dat clone karissa/more-tweets-more-votes
+dat clone datproject.org/karissa/more-tweets-more-votes
 ```
 
 #### Auth (experimental)
