@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-var subcommand = require('subcommand')
 var fs = require('fs')
 var mkdirp = require('mkdirp')
+var subcommand = require('subcommand')
 var encoding = require('dat-encoding')
 var debug = require('debug')('dat')
 var usage = require('../lib/usage')
