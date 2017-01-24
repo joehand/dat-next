@@ -105,10 +105,10 @@ authServer(port, function (err, server, closeServer) {
   test('auth - clone from registry', function (t) {
     // MAKE SURE THESE MATCH WHAT is published above
     // TODO: be less lazy and make a publish helper
-    var shortName = 'joe/awesome' // they'll never guess who wrote these tests
+    var shortName = 'localhost:' + port + '/joe/awesome' // they'll never guess who wrote these tests
     var baseDir = path.join(baseTestDir, 'dat_registry_dir')
     mkdirp.sync(baseDir)
-    var downloadDir = path.join(baseDir, shortName.split('/')[1])
+    var downloadDir = path.join(baseDir, shortName.split('/').pop())
     var cmd = dat + ' clone ' + shortName
     var st = spawn(t, cmd, {cwd: baseDir})
     st.stdout.match(function (output) {

@@ -121,8 +121,8 @@ test('clone - dat:// link', function (t) {
   })
 })
 
-test('clone - dat.land link', function (t) {
-  var key = 'dat.land/' + shareDat.key.toString('hex') + '/'
+test('clone - datproject.org link', function (t) {
+  var key = 'datproject.org/' + shareDat.key.toString('hex') + '/'
   var baseDir = path.join(baseTestDir, 'dat_land_dir')
   mkdirp.sync(baseDir)
   var downloadDir = path.join(baseDir, shareDat.key.toString('hex'))
