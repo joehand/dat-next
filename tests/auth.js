@@ -108,7 +108,7 @@ authServer(port, function (err, server, closeServer) {
       t.ifError(err)
       var info = JSON.parse(contents)
       var oldUrl = info.url
-      info.url = info.url.replace('e','a')
+      info.url = info.url.replace('e', 'a')
       fs.writeFile(path.join(fixtures, 'dat.json'), JSON.stringify(info), function (err) {
         t.ifError(err, 'error after write')
         var cmd = dat + ' publish --name awesome'
