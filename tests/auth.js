@@ -103,6 +103,29 @@ authServer(port, function (err, server, closeServer) {
     st.end()
   })
 
+  test('auth - publish our awesome dat with bad dat.json url', function (t) {
+    fs.readFile(path.join(fixtures, 'dat.json'), function (err, contents) {
+      t.ifError(err)
+      var info = JSON.parse(contents)
+      var oldUrl = info.url
+      info.url = info.url.replace('e','a')
+      fs.writeFile(path.join(fixtures, 'dat.json'), JSON.stringify(info), function (err) {
+        t.ifError(err, 'error after write')
+        var cmd = dat + ' publish --name awesome'
+        var st = spawn(t, cmd, {cwd: fixtures})
+        st.stdout.match(function (output) {
+          var published = output.indexOf('Successfully published') > -1
+          if (!published) return false
+          t.ok(published, 'published')
+          t.same(help.datJson(fixtures).url, oldUrl, 'has dat.json with url')
+          return true
+        })
+        st.stderr.empty()
+        st.end()
+      })
+    })
+  })
+
   test('auth - clone from registry', function (t) {
     // MAKE SURE THESE MATCH WHAT is published above
     // TODO: be less lazy and make a publish helper
