@@ -69,7 +69,7 @@ authServer(port, function (err, server, closeServer) {
     var st = spawn(t, cmd, {cwd: fixtures})
     st.stdout.empty()
     st.stderr.match(function (output) {
-      t.ok(output.indexOf('create an archive') > -1, 'Create archive before pub')
+      t.ok(output.indexOf('existing') > -1, 'Create archive before pub')
       return true
     })
     st.end()
