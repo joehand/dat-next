@@ -77,6 +77,7 @@ authServer(port, function (err, server, closeServer) {
 
   test('auth - create dat to publish', function (t) {
     rimraf.sync(path.join(fixtures, '.dat'))
+    rimraf.sync(path.join(fixtures, 'dat.json'))
     var cmd = dat + ' create --no-import'
     var st = spawn(t, cmd, {cwd: fixtures})
     st.stdout.match(function (output) {
@@ -145,14 +146,14 @@ authServer(port, function (err, server, closeServer) {
   })
 
   test('auth - bad clone from registry', function (t) {
-    var shortName = 'joe/not-at-all-awesome'
+    var shortName = 'localhost:' + port + '/joe/not-at-all-awesome'
     var baseDir = path.join(baseTestDir, 'dat_registry_dir_too')
     mkdirp.sync(baseDir)
-    var downloadDir = path.join(baseDir, shortName.split('/')[1])
+    var downloadDir = path.join(baseDir, shortName.split('/').pop())
     var cmd = dat + ' clone ' + shortName
     var st = spawn(t, cmd, {cwd: baseDir})
     st.stderr.match(function (output) {
-      t.same(output.trim(), 'Dat archive not found on registry.', 'not found')
+      t.same(output.trim(), 'Dat with that name not found.', 'not found')
       st.kill()
       return true
     })
