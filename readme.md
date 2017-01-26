@@ -1,50 +1,117 @@
-# dat-next
+# dat
 
-[![Travis](https://img.shields.io/travis/joehand/dat-next.svg?style=flat-square&branch=master)](https://travis-ci.org/joehand/dat-next) [![npm](https://img.shields.io/npm/v/dat-next.svg?style=flat-square)](https://npmjs.org/package/dat-next)
+> Dat is the package manager for datasets. Easily share, version control, and archive datasets. Secure, distributed, fast.
 
 [<img src="http://datproject.github.io/design/downloads/dat-data-logo.png" align="right" width="140">](https://datproject.org)
 
-Dat syncs data and files across the distributed web. Dat is optimized for speed, simplicity, and security. Read more at [datproject.org](https://datproject.org/).
+[![#dat IRC channel on freenode](https://img.shields.io/badge/irc%20channel-%23dat%20on%20freenode-blue.svg)](http://webchat.freenode.net/?channels=dat)
+[![datproject/discussions](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/datproject/discussions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+[![docs](https://img.shields.io/badge/Dat%20Project-Docs-green.svg)](http://docs.datproject.org)
+[![protocol](https://img.shields.io/badge/Dat%20Protocol-green.svg)](http://www.datprotocol.com)
 
-This repository is the new version of the command line tool for Dat.
+#### What is all this?
 
-If you have questions you can chat with us in IRC on [#dat](http://webchat.freenode.net/?channels=dat) or [Gitter](https://gitter.im/datproject/discussions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge).
+The Dat project is a set of open source applications for sharing data or files organized by [Code for Science & Society](http://codeforscience.org), a grant funded non-profit.
+With the Dat applications you can share files with collaborators, back up data to servers, and automate long-term data preservation using the Dat protocol.
+The Decentralized Archive Transport (Dat!) protocol transfers files in a **secure**, **distributed**, and **fast** network allowing you to focus on the fun work without worrying about moving files around.
 
-### Features
+* **Secure** - Dat data transfer is encrypted and the content verified on arrival. Changes are written to an append-only log ensuring transparency of updates. [Check out our security and privacy FAQ](#TODO).
+* **Distributed** - With the Dat protocol you'll connect directly to other users or servers sharing or downloading common datasets. Any device can host files to share without the need for centralized servers. [Read about the distrbuted web and Dat](#TODO).
+* **Fast** - Files download from multiple sources. Quickly sync updates by only downloading the new bytes, saving time and bandwidth. [Learn about how the Dat project makes file transfers fast](#TODO).
 
-* *Share files*: Send files to colleagues, other computers, or servers to synchronize across devices and backup.
-* *Clone Dat archives*: Download and live sync Dat archives published by anyone.
-* *Publish*: Make it easy to clone datasets by publishing a Dat link to the Dat registry.
+### Key features:
 
-### Development Status
+* **Share files** to colleagues, servers, or long-term archives.
+* **Automatically update** changes by sharing new files and syncing with the network.
+* **Distribute large datasets** without copying data to a central server by connecting directly to peers.
+* **Version history data** by tracking all changes in metadata and easily backing up old versions of files on large storage servers.
+* **Persistent identification** of changing datasets with a unique link.
+* **Instantly host** files through the distributed network and unique identifier.
 
-**dat-next** is the new version of the Dat command line interface, to replace [datproject/dat](https://github.com/datproject/dat).
+### Dat Applications
 
-`dat-next` Version 2.x.x will be released on dat-next as a beta test.
-After user testing and stability improvements, we will move development and releases to datproject/dat.
+ Visit our site for an [installation guide](http://datproject.org/install) or pick your favorite client application:
 
-**Upgrading from the old Dat command line tool? [See what the changes are](#upgrading).**
+* [Dat Command Line](#dat-command-line) - You are here! Scroll down for the details.
+* [Dat Desktop](#TODO)
+* [Beaker Browser](http://beakerbrowser.com) - An experimental p2p browser with built-in support for the Dat protocol
+* [Dat Protocol](https://www.datprotocol.com) - Build your own Dat application on the Decentralized Archive Transport (Dat) protocol
+
+---
+
+## Dat Command Line
+
+> Share, download, and backup files with the command line! Automatically sync changes to datasets. Never worry about manually transferring files again.
+
+Mac/Linux      | Windows      | Version
+-------------- | ------------ | ------------
+[![Travis](https://api.travis-ci.org/joehand/dat-next/master.svg?style=flat-square)](https://travis-ci.org/joehand/dat-next) | [![Build status](https://ci.appveyor.com/api/projects/status/github/joehand/dat-next?branch=master&svg=true)](https://ci.appveyor.com/project/joehand/dat-next) | [![NPM version](https://img.shields.io/npm/v/dat-next.svg?style=flat-square)](https://npmjs.org/package/dat-next)
+
+Have questions or need some guidance?
+You can chat with us in IRC on [#dat](http://webchat.freenode.net/?channels=dat) or [Gitter](https://gitter.im/datproject/discussions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)!
+
+### Table of Contents
+
+<li><a href="#getting-started">Getting Started</a></li>
+<li><a href="#using-dat">Using Dat</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+<li><a href="#for-developers">For Developers</a></li>
 
 ## Getting Started
 
-The dat-next command line tool can be used to share, download, and sync files across many computers via the command line.
+The Dat command line tool can be installed with `npm`. Make sure you have `node` version 4 or above and `npm` installed.
+You can run `node -v` and `npm -v` to check!
 
-### Installation
+Need to install Node? [Start here](#TODO-node/download).
 
-Install via npm:
+### Installing Dat
+
+Install `dat` from npm with the `--global, -g` option:
 
 ```
-npm install -g dat-next
+npm install -g dat
 ```
 
-**Note: if you previously installed dat with `npm install -g dat`, this will overwrite the old `dat` command.**
-
-You can make sure the install worked by running the `dat` command.
-The usage guide should print.
-
-See the [installation troubleshooting](https://github.com/datproject/dat#troubleshooting) for tips if the installation failed.
+You should be able to run the `dat` command now. If not, see the [installation troubleshooting](#troubleshooting) for tips.
 
 ### Quickstart
+
+You can mostly get around in the Dat command line world with two commands:
+
+* `dat share <dir>`: share files from your computer to another computer/server. This will share your local `<dir>` and print a `dat://` link. Send the printed link to other users so they can download your files.
+* `dat clone dat://<link> <download-dir>`: download files from a remote computer/server sharing files with Dat. This will download the files from `dat://<link>` to your `<download-dir>`.
+
+#### TODO (maybe two gifs here?)
+
+#### A Brief Primer on `dat://`` links
+
+> You may have seen Dat links around: `dat://ff34725120b2f3c5bd5028e4f61d14a45a22af48a7b12126d5d588becde88a93`. What is with the weird long string of characters? Let's break it down!
+
+##### `dat://` - the protocol
+
+The first part of the link is the link protocol, Dat (read about the Dat protocol at [datprotocol.com](http://www.datprotocol.com)).
+The protocol describes what "language" the link is in and what type of applications can open it.
+
+##### `ff34725120b2f3c5bd5028e4f61d14a45a22af48a7b12126d5d588becde88a93` - the unique identifier
+
+The second part of the link is a 64-character hex strings ([ed25519 public-keys](https://ed25519.cr.yp.to/) to be precise).
+Each Dat archive gets a public key link to identify it.
+With the hex string as a link we can do two things: 1) encrypt the data transfer and 2) give each archive a persistent identifier, an ID that never changes, even as file are updated (as opposed to a checksum which is based on the file contents).
+
+##### `dat://ff34725120b2f3c5bd5028e4f61d14a45a22af48a7b12126d5d588becde88a93`
+
+All together, the links can be thought of similarly to a web URL, as a place to get content, but with some extra special properties.
+Links point to a set of files instead of a specific server.
+This means when you run `dat clone dat://<link>` you do not have to worry about who is hosting the files at that link or if the content has changed.
+You'll always get the latest content in the network and the link helps to verify the integrity of the content!
+
+Try out `dat clone` with the link above to read more about the protocol!
+
+---
+
+## TODO starting here
+
+---
 
 #### Sharing Files
 
