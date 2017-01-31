@@ -9,7 +9,7 @@
 [![docs](https://img.shields.io/badge/Dat%20Project-Docs-green.svg)](http://docs.datproject.org)
 [![protocol](https://img.shields.io/badge/Dat%20Protocol-green.svg)](http://www.datprotocol.com)
 
-#### What is all this?
+#### What is all Dat?
 
 The Dat project is a set of open source applications for sharing data or files organized by [Code for Science & Society](http://codeforscience.org), a grant funded non-profit.
 With the Dat applications you can share files with collaborators, back up data to servers, and automate long-term data preservation using the Dat protocol.
@@ -76,12 +76,32 @@ You should be able to run the `dat` command now. If not, see the [installation t
 
 ### Quickstart
 
+We have Dat installed, let's use it! Currently, the Dat command line always moves files from a single source to any number of destinations.
+If you are creating and updating files, you will be the source and will use the *share* commands.
+Otherwise, you can *clone* files from remote Dat archives shared to you with a Dat link.
+
 You can mostly get around in the Dat command line world with two commands:
 
-* `dat share <dir>`: share files from your computer to another computer/server. This will share your local `<dir>` and print a `dat://` link. Send the printed link to other users so they can download your files.
-* `dat clone dat://<link> <download-dir>`: download files from a remote computer/server sharing files with Dat. This will download the files from `dat://<link>` to your `<download-dir>`.
+#### `dat share <dir>`
 
-#### TODO (maybe two gifs here?)
+Use `dat share` to send files from your computer to any number of other computers or servers.
+This will share a local `<dir>` and print a `dat://` link.
+Send the printed link to other users so they can download your files.
+
+Dat share will create a `.dat` directory in the folder you share.
+The `.dat` folder allows you to add new files and update old files on the same Dat link. 
+
+**Make sure not to share the `.dat` folder with anyone, it contains a private key that allows you to update and add files.**
+
+##### TODO gif
+
+#### `dat clone dat://<link> <download-dir>`
+
+Use `dat clone` to download files from a remote computers sharing files with Dat.
+This will download the files from `dat://<link>` to your `<download-dir>`.
+The download exits after it completes but you can continue to update the files later after the clone is done. 
+
+##### TODO gif
 
 #### A Brief Primer on `dat://`` links
 
@@ -107,105 +127,29 @@ You'll always get the latest content in the network and the link helps to verify
 
 Try out `dat clone` with the link above to read more about the protocol!
 
----
-
-## TODO starting here
-
----
-
-#### Sharing Files
-
-* `cd my-files-to-share` - change to the folder to share
-* `dat create` - create a Dat archive and import the files from the folder
-
-```
-dat create
-Dat Archive initialized: /path/to/my-files-to-share
-Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
-
-File import finished!
-Total Size: 50 files (40.5 MB)
-```
-
-Now you should have a `.dat` folder inside `my-files-to-share`. Once the dat is created, you can start sharing it over the p2p network:
-
-* `dat sync` - share the files over the Dat network
-
-```
-dat-next sync
-Syncing Dat Archive: /path/to/my-files-to-share
-Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
-
-Watching files for changes...
-Total Size: 50 files (40.5 MB)
-
-Looking for connections in Dat Network...
-```
-
-The `sync` command will also watch your directory for changes and share any updated files.
-
-#### Downloading Files
-
-Once the files are shared somewhere, you can clone them to another location:
-
-* `dat clone dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151 download-folder` - Clones all the files from the shared Dat archive.
-
-```
-dat clone dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151 download-folder
-Cloning Dat Archive: /path/to/download-folder
-Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
-
-Metadata: [==================================================>] 100%
-Content:  [====================>------------------------------] 41%
-Total size: 50 files (40.5 MB)
-
-1 peer on the Dat Network
-Downloading: 5.6 MB/s
-```
-
-##### Downloading Updates
-
-After you clone a Dat archive, you can update the files later:
-
-* `cd download-folder`
-* `dat pull` - download updates and exit
-
-```
-dat pull
-Pulling Dat Archive: /path/to/download-folder
-Link: dat://56c1977328c94c988137c9ff3cbeaab217d765772299840e7be7172b18dbb151
-
-
-Download Finished!
-Total size: 50 files (40.5 MB)
-```
-
 ### Demo File Download
 
-To get started using Dat, we can download files via Dat. Similar to git, you do this by running `dat clone`:
+To get started using Dat, we can download files via Dat.
+Similar to git, you do this by running `dat clone`:
 
 ```
-dat clone dat://df6d299c7c90334537242487919785ab339e11ee9c1b8fda9ea28d9bf31a3d08 datproject-website
+dat clone dat://ff34725120b2f3c5bd5028e4f61d14a45a22af48a7b12126d5d588becde88a93 datprotocol-website
+
+Cloning Dat Archive: /Users/joe/Desktop/datprotocol-website
+Link: dat://ff34725120b2f3c5bd5028e4f61d14a45a22af48a7b12126d5d588becde88a93
+
+Metadata: [==================================================>] 100%
+Content:  [=====>---------------------------------------------] 11%
+Total size: 8 files (43.3 kB)
+
+2 peers on the Dat Network
+Downloading: 2.68 kB/s 
 ```
 
-This will download the files shared at that link to a folder named datproject-website.
+This will download the files shared at that link to a folder named datprotocol-website.
+These files are being shared by a server over Dat (to ensure high availability) but you may connect to any number of peers also hosting the content.
 
-Dat archives are given an link that you use to share or download, similar to a website URL.
-In this case, this link has the files from the datproject.org website.
-Dat archive links are 64 characters long and prefixed with `dat://`.
-
-Along with the link, you can tell Dat where to clone the files.
-All together, you can download files by typing `dat clone <dat-link> <download-directory>`.
-
-If the source files are updated you can run `dat pull` or `dat sync` inside the directory to update the files.
-
-```
-cd datproject-website
-dat pull
-```
-
-`dat sync` will do the same thing but keeps running until you stop it.
-`dat pull` will update the files and exit.
+Get started using Dat today with the `share` and `clone` commands or read below for more details.
 
 ## Usage
 
@@ -338,12 +282,11 @@ You can deploy your own compatible [registry server](https://github.com/datproje
 
 If you are familiar with the old Dat CLI, there will only be minor changes to use dat-next.
 
-To share files with Dat, you'll need two commands now instead of one.
+To share files with Dat, you'll need to specify the `share` command now.
 
 ```
 cd my-folder
-dat create
-dat sync
+dat share
 ```
 
 After the Dat archive is created, you can run `dat sync` in the folder to share updates or use the same command as the old dat: `dat my-folder`.
