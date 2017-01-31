@@ -11,9 +11,9 @@
 
 #### What is all Dat?
 
-The Dat project is a set of open source applications for sharing data or files organized by [Code for Science & Society](http://codeforscience.org), a grant funded non-profit.
-With the Dat applications you can share files with collaborators, back up data to servers, and automate long-term data preservation using the Dat protocol.
-The Decentralized Archive Transport (Dat!) protocol transfers files in a **secure**, **distributed**, and **fast** network allowing you to focus on the fun work without worrying about moving files around.
+The Dat project is a set of open source applications for sharing data or files organized by [Code for Science & Society](http://codeforscience.org), a grant funded non-profit, built on the [Dat Protocol](https://www.datprotocol.com/).
+With the Dat applications you can share files with collaborators, back up data to servers, and automate long-term data preservation.
+The Decentralized Archive Transport (Dat) protocol transfers files in a **secure**, **distributed**, and **fast** network allowing you to focus on the fun work without worrying about moving files around.
 
 * **Secure** - Dat data transfer is encrypted and the content verified on arrival. Changes are written to an append-only log ensuring transparency of updates. [Check out our security and privacy FAQ](#TODO).
 * **Distributed** - With the Dat protocol you'll connect directly to other users or servers sharing or downloading common datasets. Any device can host files to share without the need for centralized servers. [Read about the distrbuted web and Dat](#TODO).
@@ -33,7 +33,7 @@ The Decentralized Archive Transport (Dat!) protocol transfers files in a **secur
  Visit our site for an [installation guide](http://datproject.org/install) or pick your favorite client application:
 
 * [Dat Command Line](#dat-command-line) - You are here! Scroll down for the details.
-* [Dat Desktop](#TODO)
+* [Dat Desktop](https://datproject.org/install#desktop) - A desktop app to manage multiple Dats on your desktop machine.
 * [Beaker Browser](http://beakerbrowser.com) - An experimental p2p browser with built-in support for the Dat protocol
 * [Dat Protocol](https://www.datprotocol.com) - Build your own Dat application on the Decentralized Archive Transport (Dat) protocol
 
@@ -45,7 +45,7 @@ The Decentralized Archive Transport (Dat!) protocol transfers files in a **secur
 
 Mac/Linux      | Windows      | Version
 -------------- | ------------ | ------------
-[![Travis](https://api.travis-ci.org/joehand/dat-next/master.svg?style=flat-square)](https://travis-ci.org/joehand/dat-next) | [![Build status](https://ci.appveyor.com/api/projects/status/github/joehand/dat-next?branch=master&svg=true)](https://ci.appveyor.com/project/joehand/dat-next) | [![NPM version](https://img.shields.io/npm/v/dat-next.svg?style=flat-square)](https://npmjs.org/package/dat-next)
+[![Travis](https://travis-ci.org/joehand/dat-next.svg?branch=master)](https://travis-ci.org/joehand/dat-next) | [![Build status](https://ci.appveyor.com/api/projects/status/github/joehand/dat-next?branch=master&svg=true)](https://ci.appveyor.com/project/joehand/dat-next) | [![NPM version](https://img.shields.io/npm/v/dat-next.svg)](https://npmjs.org/package/dat-next)
 
 Have questions or need some guidance?
 You can chat with us in IRC on [#dat](http://webchat.freenode.net/?channels=dat) or [Gitter](https://gitter.im/datproject/discussions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)!
@@ -62,7 +62,7 @@ You can chat with us in IRC on [#dat](http://webchat.freenode.net/?channels=dat)
 The Dat command line tool can be installed with `npm`. Make sure you have `node` version 4 or above and `npm` installed.
 You can run `node -v` and `npm -v` to check!
 
-Need to install Node? [Start here](#TODO-node/download).
+Need to install Node? [Start here](https://nodejs.org/en/download/).
 
 ### Installing Dat
 
@@ -275,18 +275,18 @@ dat create
 dat publish
 ```
 
-All authentication and publishing requests take the `--server` option.
-You can deploy your own compatible [registry server](https://github.com/datproject/datfolder) if you'd rather use your own service.
+All authentication requests take the `--server` option.
+You can deploy your own compatible [registry server](https://github.com/datproject/datproject.org) if you'd rather use your own service.
 
-### Upgrading
+### Upgrading from version 11
 
-If you are familiar with the old Dat CLI, there will only be minor changes to use dat-next.
+If you are familiar with the Dat CLI version 11, there will only be minor changes to use dat version 12.
 
 To share files with Dat, you'll need to specify the `share` command now.
 
 ```
 cd my-folder
-dat share
+dat share my-folder
 ```
 
 After the Dat archive is created, you can run `dat sync` in the folder to share updates or use the same command as the old dat: `dat my-folder`.
@@ -299,28 +299,84 @@ dat clone dat://<link> download-folder
 
 Once the initial download is complete, you can use `dat pull` inside to folder to update or use the same command as the old dat: `dat download-folder`.
 
-### Compatibility
+## Troubleshooting
 
-All archives created previously will still work with dat-next.
+We've provided some troubleshooting tips based on issues users have seen.
+Please [open an issue](https://github.com/datproject/dat/issues/new) or ask us in our [chat room](https://gitter.im/datproject/discussions) if you need help troubleshooting and it is not covered here.
 
-#### Shared a folder with the old Dat?
+If you have trouble sharing/downloading in a directory with a `.dat` folder, try deleting it and running the command again.
 
-With `dat-next` you can still run `dat path/to/my-folder`.
-This is a shortcut for `dat sync path/to/my-folder`, which will connect to the network and import new and updated files.
+#### Check Your Dat Version
 
-#### Downloaded a folder with the old Dat?
+Knowing the version is really helpful if you run into any bugs, and will help us troubleshoot your issue.
 
-With `dat-next` you can still run `dat path/to/my-folder`.
-This is a shortcut for `dat sync path/to/my-folder`, which will connect to the network and download updates.
-
-You can also use `dat pull` to update files and exit:
+Check your Dat version:
 
 ```
-cd path/to/my-folder
-dat pull
+dat -v
 ```
+
+You should see the Dat semantic version printed, e.g. 11.1.2.
+
+### Installation Issues
+
+#### Node & npm
+
+To use the Dat command line tool you will need to have [node and npm installed](https://docs.npmjs.com/getting-started/installing-node).
+Make sure those are installed correctly before installing Dat.
+You can check the version of each:
+
+```
+node -v
+npm -v
+```
+
+#### Global Install
+
+The `-g` option installs Dat globally allowing you to run it as a command.
+Make sure you installed with that option.
+
+* If you receive an `EACCES` error, read [this guide](https://docs.npmjs.com/getting-started/fixing-npm-permissions) on fixing npm permissions.
+* If you receive an `EACCES` error, you may also install dat with sudo: `sudo npm install -g dat`.
+* Have other installation issues? Let us know, you can [open an issue](https://github.com/datproject/dat/issues/new) or ask us in our [chat room](https://gitter.im/datproject/discussions).
+
+### Networking Issues
+
+Networking capabilities vary widely with each computer, network, and configuration.
+Whenever you run a Dat there are several steps to share or download files with peers:
+
+1. Discovering Peers
+2. Connecting to Peers
+3. Sending & Receiving Data
+
+With successful use, Dat will show `Connected to 1 peer` after connection.
+If you never see a peer connected your network may be restricting discovery or connection.
+Please try using the `dat --doctor` command (see below) between the two computers not connecting. This will help troubleshoot the networks.
+
+* Dat may [have issues](https://github.com/datproject/dat/issues/503) connecting if you are using iptables.
+
+#### Dat Doctor
+
+We've included a tool to identify network issues with Dat, the Dat doctor.
+The Dat doctor will run two tests:
+
+1. Attempt to connect to a server running a Dat peer.
+2. Attempt a direct connection between two peers. You will need to run the command on both the computers you are trying to share data between. 
+
+Start the doctor by running:
+
+```
+dat doctor
+```
+
+For direct connection tests, the doctor will print out a command to run on the other computer, `dat doctor <64-character-string>`.
+The doctor will run through the key steps in the process of sharing data between computers to help identify the issue.
+
+---
 
 ## For Developers
+
+Please see [guidelines on contributing](https://github.com/datproject/dat/blob/master/CONTRIBUTING.md) before submitting an issue or PR.
 
 This command line library uses [dat-node](https://github.com/datproject/dat-node) to create and manage the archives and networking.
 If you'd like to build your own Dat application that is compatible with this command line tool, we suggest using dat-node.
@@ -333,7 +389,8 @@ Clone this repository and in a terminal inside of the folder you cloned run this
 npm link
 ```
 
-This should add a `dat` command line command to your PATH. Now you can run the dat command to try it out.
+This should add a `dat` command line command to your PATH.
+Now you can run the dat command to try it out.
 
 The contribution guide also has more tips on our [development workflow](https://github.com/datproject/dat/blob/master/CONTRIBUTING.md#development-workflow).
 
