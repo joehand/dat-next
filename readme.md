@@ -158,7 +158,7 @@ Dat archives have a one to many relationship, there is a single source that can 
 * **Sharing**: If you want to share files from your computer that you will update, you are the *source archive* or *local archive*.
 * **Downloading**: If your colleague has files they want to share, they will be the source and you'll be downloading from a *remote archive*.
 
-The first commands, *init* or *clone*, creates a `.dat` folder where the Dat metadata is stored.
+The first time you run a command, a `.dat` folder to store the Dat metadata.
 Once a Dat is created, you can run all the commands inside that folder, similar to git.
 
 ### Sharing
@@ -203,6 +203,8 @@ Sync watched files for changes and imports updated files.
 
 #### Snapshot
 
+A snapshot archive shares a folder with specific content. Content can only be added once and then the link is created. Once a snapshot archive has a link, it cannot be updated. 
+
 ```
 dat snapshot [<folder>]
 ```
@@ -212,16 +214,18 @@ Snapshot will create the archive in snapshot, `{live: false}`, mode.
 
 ### Downloading
 
+Start downloading by running the `clone` command. This will create a folder, download the content and metadata, and create a `.dat` folder. Once you started the download, you can resume using `clone` or the other download commands.
+
 ```
 dat clone <dat-link> [<folder>] [--temp]
 ```
 
 Clone a remote Dat Archive to a local folder.
-Will create a folder with the key name is no folder is specified.
+This will create a folder with the key name is no folder is specified.
 
 ##### Options
 
-`--temp`: Creates a temporary database and doesn't save the metadata to disk, only the latest files.
+`--temp`: Creates a temporary database and does not save the metadata to disk.
 
 #### Updating Downloaded Archives
 
