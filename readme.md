@@ -11,8 +11,8 @@
 
 #### What is all Dat?
 
-The Dat project is a set of open source applications for sharing data or files organized by [Code for Science & Society](http://codeforscience.org), a grant funded non-profit, built on the [Dat Protocol](https://www.datprotocol.com/).
-With the Dat applications you can share files with collaborators, back up data to servers, and automate long-term data preservation.
+The Dat project is a set of open source applications for sharing data or files led by [Code for Science & Society](http://codeforscience.org), a grant funded non-profit, and built on the [Dat Protocol](https://www.datprotocol.com/).
+With Dat applications you can share files with collaborators, back up data to servers, and automate long-term data preservation.
 The Decentralized Archive Transport (Dat) protocol transfers files in a **secure**, **distributed**, and **fast** network allowing you to focus on the fun work without worrying about moving files around.
 
 * **Secure** - Dat data transfer is encrypted and the content verified on arrival. Changes are written to an append-only log ensuring transparency of updates. [Check out our security and privacy FAQ](#TODO).
@@ -77,7 +77,7 @@ You should be able to run the `dat` command now. If not, see the [installation t
 ### Quickstart
 
 We have Dat installed, let's use it! Currently, the Dat command line always moves files from a single source to any number of destinations.
-If you are creating and updating files, you will be the source and will use the *share* commands.
+If you are creating files on your computer to share, you will be the source and will use the *share* commands.
 Otherwise, you can *clone* files from remote Dat archives shared to you with a Dat link.
 
 You can mostly get around in the Dat command line world with two commands:
@@ -153,10 +153,10 @@ Get started using Dat today with the `share` and `clone` commands or read below 
 
 ## Usage
 
-Dat archives have a one to many relationship, there is a single source that can create and write files and many peers that can download the files *(in future versions there may be several sources)*.
+Dat archives have a one to many relationship. There is a single source that can create and write files. There are many peers that can download the files *(in future versions there may be several sources)*.
 
-* **Sharing**: If you want to share files from your computer that you will update, you are the *source archive* or *local archive*.
-* **Downloading**: If your colleague has files they want to share, they will be the source and you'll be downloading from a *remote archive*.
+* **Sharing**: If you want to share files from your computer that you will update, you are the *source*.
+* **Downloading**: If your colleague has files they want to share, they will be the source and you'll be downloading from a *remote* archive.
 
 The first time you run a command, a `.dat` folder to store the Dat metadata.
 Once a Dat is created, you can run all the commands inside that folder, similar to git.
@@ -182,11 +182,13 @@ You can also do `create` and `sync` in separate steps if you'd like more control
 #### Creating a Dat archive
 
 ```
-dat create [<folder>] [--no-import]
+dat create [<folder>] [--import]
 ```
 
 Create a new Dat Archive in the current directory (or specify `dir`).
 Will automatically import the files in that directory to the archive.
+
+* Use `--import` to import files after the archive is created.
 
 #### Syncing to Network
 
