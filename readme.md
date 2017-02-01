@@ -402,3 +402,7 @@ The contribution guide also has more tips on our [development workflow](https://
 
 * `npm run test` to run tests
 * `npm run auth-server` to run a local auth server for testing
+
+## License
+
+BSD-3-Clause
