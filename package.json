@@ -1,6 +1,6 @@
 {
   "name": "dat-next",
-  "version": "2.3.5",
+  "version": "2.3.6",
   "description": "Next version of the Dat CLI client",
   "bin": {
     "dat": "bin/cli.js"
