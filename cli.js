@@ -61,7 +61,7 @@ dat(src, dest, argv, function (archive, swarm, importProgress) {
       output[1][0] = bar(imported)
     })
 
-    importProgress.on('chunk', function (chunk) {
+    importProgress.on('put-data', function (chunk) {
       imported += chunk.length
       if (bar) output[1][0] = bar(imported)
       output[1][1] = pretty(indexSpeed(chunk.length)) + '/s'

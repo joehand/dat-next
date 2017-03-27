@@ -27,7 +27,7 @@
     "hyperdrive": "github:mafintosh/hyperdrive#v8",
     "localcast": "^2.0.1",
     "minimist": "^1.2.0",
-    "mirror-folder": "github:joehand/mirror-folder#add/through",
+    "mirror-folder": "^1.1.0",
     "mkdirp": "^0.5.1",
     "prettier-bytes": "^1.0.3",
     "progress-string": "^1.2.1",

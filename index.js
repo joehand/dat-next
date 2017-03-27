@@ -14,12 +14,12 @@ module.exports = run
 
 function run (src, dest, opts, cb) {
   var key
-  var importProgress
   if (dest) {
     key = src
     src = null
     mkdirp.sync(dest)
   }
+
   var dir = dest || src
   opts = xtend({
     storage: opts.sleep ? path.join(dir, '.dat') : ram
@@ -28,38 +28,43 @@ function run (src, dest, opts, cb) {
 
   archive.on('ready', function () {
     cast.emit('ready')
-    if (!key) importFiles()
+    var progress = importFiles()
     var swarm = joinNetwork()
-    cb(archive, swarm, importProgress)
+    cb(archive, swarm, progress)
   })
 
   function importFiles () {
+    if (!archive.metadata.writable) return
+    var progress
     var ignore = datIgnore(dir)
-    importProgress = mirror(dir, {name: '/', fs: archive}, {
+
+    progress = mirror(dir, {name: '/', fs: archive}, {
       ignore: ignore
     })
 
     countDir(dir, { ignore: ignore }, function (err, data) {
       if (err) throw err
       cast.emit('import:count', data)
-      importProgress.emit('count', data)
+      progress.emit('count', data)
     })
 
-    importProgress.on('put', function (src, dst) {
+    progress.on('put', function (src, dst) {
       cast.emit('import:put', src, dst)
     })
-    importProgress.on('chunk', function (chunk) {
+    progress.on('put-data', function (chunk) {
       cast.emit('import:chunk', chunk)
     })
-    importProgress.on('del', function (dst) {
+    progress.on('del', function (dst) {
       cast.emit('import:del', dst)
     })
-    importProgress.on('end', function () {
+    progress.on('end', function () {
       cast.emit('import:end')
     })
-    importProgress.on('error', function (err) {
+    progress.on('error', function (err) {
       debug('IMPORT ERROR:', err)
     })
+
+    return progress
   }
 
   function joinNetwork () {
