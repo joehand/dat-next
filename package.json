@@ -20,7 +20,7 @@
   "homepage": "https://github.com/joehand/dat-next#readme",
   "dependencies": {
     "count-files": "^2.2.1",
-    "dat-ignore": "0.0.0",
+    "dat-ignore": "1.0.0",
     "dat-swarm-defaults": "^1.0.0",
     "debug": "^2.4.5",
     "discovery-swarm": "^4.3.0",

@@ -36,16 +36,7 @@ function run (src, dest, opts, cb) {
   function importFiles () {
     var ignore = datIgnore(dir)
     importProgress = mirror(dir, {name: '/', fs: archive}, {
-      ignore: true,
-      equals: function (a, b, cb) {
-        // Ignores
-        if (ignore(a.name)) return cb(null, true)
-        if (!b.stat) return cb(null, false)
-
-        if (!a.stat.isDirectory() && (a.stat.size !== b.stat.size)) return cb(null, false)
-        if (a.stat.mtime.getTime() > b.stat.mtime.getTime()) return cb(null, false)
-        cb(null, true)
-      }
+      ignore: ignore
     })
 
     countDir(dir, { ignore: ignore }, function (err, data) {
