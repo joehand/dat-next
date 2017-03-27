@@ -16,7 +16,7 @@ var src = argv._[0] || process.cwd()
 var dest = argv._[1]
 
 var output = [['', ''], ['', '', '', '']]
-var log = logger(output)
+var log = logger(output, { quiet: argv.quiet })
 var indexSpeed = speed()
 var downloadSpeed = speed()
 var hasContent
@@ -25,7 +25,7 @@ var downloaded = 0
 var total = 0
 
 dat(src, dest, argv, function (archive, swarm, importProgress) {
-  output[0][0] = 'Starting...'
+  output[0][0] = 'Here we go!'
   setInterval(function () {
     networkUI()
     log.print()
@@ -39,48 +39,43 @@ dat(src, dest, argv, function (archive, swarm, importProgress) {
   archive.once('content', function () {
     output[0].push('') // add space for peers
     hasContent = true
-
-    if (!importProgress) {
-      downloadUI()
-    }
+    if (!importProgress) downloadUI()
   })
 
-  if (importProgress) {
-    output[0][0] = `dat://${archive.key.toString('hex')}`
+  if (!importProgress) return output[0][0] = 'Connecting...'
 
-    var bar
+  var bar
+  output[0][0] = `dat://${archive.key.toString('hex')}`
 
-    importProgress.on('count', function (count) {
-      total = count.bytes
-      bar = progress({
-        total: total,
-        style: function (a, b) {
-          return `[${a}${b}] ${pretty(imported)}/${pretty(total)}`
-        }
-      })
-      output[1][0] = bar(imported)
+  importProgress.on('count', function (count) {
+    total = count.bytes
+    bar = progress({
+      total: total,
+      style: function (a, b) {
+        return `[${a}${b}] ${pretty(imported)}/${pretty(total)}`
+      }
     })
+    output[1][0] = bar(imported)
+  })
 
-    importProgress.on('put-data', function (chunk) {
-      imported += chunk.length
-      if (bar) output[1][0] = bar(imported)
-      output[1][1] = pretty(indexSpeed(chunk.length)) + '/s'
-    })
+  importProgress.on('put-data', function (chunk) {
+    imported += chunk.length
+    if (bar) output[1][0] = bar(imported)
+    output[1][1] = pretty(indexSpeed(chunk.length)) + '/s'
+  })
 
-    importProgress.on('put', function (src, dst) {
-      output[1][3] = `ADD: ${dst.name}`
-    })
+  importProgress.on('put', function (src, dst) {
+    output[1][3] = `ADD: ${dst.name}`
+  })
 
-    importProgress.on('del', function (src, dst) {
-      output[1][3] = `DEL: ${dst.name}`
-    })
+  importProgress.on('del', function (src, dst) {
+    output[1][3] = `DEL: ${dst.name}`
+  })
 
-    importProgress.on('end', function (src, dst) {
-      output[1] = [`Import complete: ${pretty(total)}`]
-    })
-  } else {
-    output[0][0] = 'Downloading...'
-  }
+  importProgress.on('end', function (src, dst) {
+    imported = total // TODO: end of put
+    output[1] = [`Import complete: ${pretty(total)}`]
+  })
 
   function downloadUI () {
     var bar = downloadBar()
