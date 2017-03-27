@@ -42,7 +42,10 @@ dat(src, dest, argv, function (archive, swarm, importProgress) {
     if (!importProgress) downloadUI()
   })
 
-  if (!importProgress) return output[0][0] = 'Connecting...'
+  if (!importProgress) {
+    output[0][0] = 'Connecting...'
+    return
+  }
 
   var bar
   output[0][0] = `dat://${archive.key.toString('hex')}`
