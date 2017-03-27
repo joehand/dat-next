@@ -2,13 +2,13 @@ var path = require('path')
 var xtend = require('xtend')
 var mkdirp = require('mkdirp')
 var hyperdrive = require('hyperdrive')
+var network = require('hyperdiscovery')
 var ram = require('random-access-memory')
 var mirror = require('mirror-folder')
 var countDir = require('count-files')
 var datIgnore = require('dat-ignore')
 var debug = require('debug')('dat')
 var cast = require('localcast')('dat-next')
-var network = require('./lib/network')
 
 module.exports = run
 

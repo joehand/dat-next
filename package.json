@@ -24,6 +24,7 @@
     "dat-swarm-defaults": "^1.0.0",
     "debug": "^2.4.5",
     "discovery-swarm": "^4.3.0",
+    "hyperdiscovery": "^1.3.0",
     "hyperdrive": "github:mafintosh/hyperdrive#v8",
     "localcast": "^2.0.1",
     "minimist": "^1.2.0",
