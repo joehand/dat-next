@@ -6,14 +6,13 @@
     "dat-next": "cli.js"
   },
   "scripts": {
-    "auth-server": "DEBUG=* node scripts/auth-server.js",
-    "test": "standard && tape tests/*.js | tap-spec"
+    "test": "standard"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/joehand/dat-next.git"
   },
-  "author": "Joe Hand <joe@hand.email> (https://joeahand.com/)",
+  "author": "Joe Hand <joe@hand.email>",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/joehand/dat-next/issues"

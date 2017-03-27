@@ -4,8 +4,3 @@ node_js:
   - "4"
   - "6"
   - "7"
-
-sudo: false
-
-script:
- - npm test
