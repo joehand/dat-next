@@ -8,7 +8,6 @@ var mirror = require('mirror-folder')
 var countDir = require('count-files')
 var datIgnore = require('dat-ignore')
 var debug = require('debug')('dat')
-var cast = require('localcast')('dat-next')
 
 module.exports = run
 
@@ -27,7 +26,6 @@ function run (src, dest, opts, cb) {
   var archive = hyperdrive(opts.storage, key, opts)
 
   archive.on('ready', function () {
-    cast.emit('ready')
     var progress = importFiles()
     var swarm = joinNetwork()
     cb(archive, swarm, progress)
@@ -42,26 +40,13 @@ function run (src, dest, opts, cb) {
       ignore: ignore
     })
 
-    countDir(dir, { ignore: ignore }, function (err, data) {
-      if (err) throw err
-      cast.emit('import:count', data)
-      progress.emit('count', data)
-    })
-
-    progress.on('put', function (src, dst) {
-      cast.emit('import:put', src, dst)
-    })
-    progress.on('put-data', function (chunk) {
-      cast.emit('import:chunk', chunk)
-    })
-    progress.on('del', function (dst) {
-      cast.emit('import:del', dst)
-    })
-    progress.on('end', function () {
-      cast.emit('import:end')
-    })
     progress.on('error', function (err) {
       debug('IMPORT ERROR:', err)
+    })
+
+    countDir(dir, { ignore: ignore }, function (err, data) {
+      if (err) throw err
+      progress.emit('count', data)
     })
 
     return progress
