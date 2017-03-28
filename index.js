@@ -35,7 +35,10 @@ function run (src, dest, opts, cb) {
   function storage () {
     if (!opts.sleep) return ram
     if (typeof opts.sleep === 'string') return opts.sleep
-    if (!src) return path.join(dest, '.dat') // TODO: if dest is file
+    if (!src) {
+      mkdirp.sync(dest)
+      return path.join(dest, '.dat') // TODO: if dest is file
+    }
 
     var isDir = fs.statSync(src).isDirectory()
     if (isDir) return path.join(src, '.dat')
