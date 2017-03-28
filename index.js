@@ -8,6 +8,7 @@ var ram = require('random-access-memory')
 var mirror = require('mirror-folder')
 var count = require('count-files')
 var datIgnore = require('dat-ignore')
+var encoding = require('dat-encoding')
 var debug = require('debug')('dat')
 
 module.exports = run
@@ -15,7 +16,12 @@ module.exports = run
 function run (src, dest, opts, cb) {
   var key
   if (dest) {
-    key = src
+    try {
+      // validate key + remove dat:// stuff
+      key = encoding.toStr(src)
+    } catch (e) {
+      return cb(new Error('Invalid dat link'))
+    }
     src = null
   }
 
