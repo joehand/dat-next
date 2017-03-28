@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/joehand/dat-next#readme",
   "dependencies": {
-    "count-files": "^2.2.1",
+    "count-files": "^2.3.0",
     "dat-ignore": "1.0.0",
     "dat-swarm-defaults": "^1.0.0",
     "debug": "^2.4.5",
@@ -28,7 +28,7 @@
     "hyperdrive": "github:mafintosh/hyperdrive#v8",
     "localcast": "^2.0.1",
     "minimist": "^1.2.0",
-    "mirror-folder": "^1.1.0",
+    "mirror-folder": "^1.1.1",
     "mkdirp": "^0.5.1",
     "prettier-bytes": "^1.0.3",
     "progress-string": "^1.2.1",

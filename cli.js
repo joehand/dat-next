@@ -68,7 +68,8 @@ dat(src, dest, argv, function (archive, swarm, importProgress) {
   })
 
   importProgress.on('put', function (src, dst) {
-    output[1][3] = `ADD: ${dst.name}`
+    var name = (dst.name === '/') ? src.name : dst.name // use prettier names if available
+    output[1][3] = `ADD: ${name}`
   })
 
   importProgress.on('del', function (src, dst) {
