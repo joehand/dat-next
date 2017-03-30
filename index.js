@@ -5,6 +5,7 @@ var mkdirp = require('mkdirp')
 var hyperdrive = require('hyperdrive')
 var network = require('hyperdiscovery')
 var ram = require('random-access-memory')
+var secretStore = require('dat-secret-storage')
 var mirror = require('mirror-folder')
 var count = require('count-files')
 var datIgnore = require('dat-ignore')
@@ -36,14 +37,14 @@ function run (src, dest, opts, cb) {
 
   function storage () {
     if (!opts.sleep) return ram
-    if (typeof opts.sleep === 'string') return opts.sleep
+    if (typeof opts.sleep === 'string') return secretStore(opts.sleep)
     if (!src) {
       mkdirp.sync(dest)
       return path.join(dest, '.dat') // TODO: if dest is file
     }
 
     var isDir = fs.statSync(src).isDirectory()
-    if (isDir) return path.join(src, '.dat')
+    if (isDir) return secretStore(path.join(src, '.dat'))
     return cb(new Error('Specify dir for sleep files: --sleep <dir>'))
   }
 
