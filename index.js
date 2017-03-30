@@ -14,6 +14,8 @@ var debug = require('debug')('dat')
 module.exports = run
 
 function run (src, dest, opts, cb) {
+  if (!opts) opts = {}
+
   var key
   if (dest) {
     try {
@@ -51,6 +53,7 @@ function run (src, dest, opts, cb) {
     var ignore = datIgnore(src)
 
     progress = mirror(src, {name: '/', fs: archive}, {
+      live: opts.watch,
       ignore: ignore
     })
 

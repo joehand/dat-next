@@ -10,7 +10,7 @@ var dat = require('./')
 process.title = 'dat-next'
 
 var argv = minimist(process.argv.slice(2), {
-  alias: {sleep: 's', quiet: 'q'}
+  alias: {sleep: 's', quiet: 'q', watch: 'w'}
 })
 var src = argv._[0] || process.cwd()
 var dest = argv._[1]
@@ -65,6 +65,7 @@ dat(src, dest, argv, function (archive, swarm, importProgress) {
     imported += chunk.length
     if (bar) output[1][0] = bar(imported)
     output[1][1] = pretty(indexSpeed(chunk.length)) + '/s'
+    if (argv.watch) output[1][2] = 'Watching for changes...'
   })
 
   importProgress.on('put', function (src, dst) {
