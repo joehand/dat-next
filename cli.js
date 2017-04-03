@@ -15,7 +15,11 @@ var argv = minimist(process.argv.slice(2), {
 var src = argv._[0] || process.cwd()
 var dest = argv._[1]
 
-var output = [['', ''], ['', '', '', '']]
+var output = [
+  ['', ''], // Key/Msg + Peer Count
+  ['', ''], // Total Import/Download Progress
+  ['', ''] // File Import Progress
+]
 var log = logger(output, { quiet: argv.quiet })
 var indexSpeed = speed()
 var downloadSpeed = speed()
@@ -23,6 +27,10 @@ var hasContent
 var imported = 0
 var downloaded = 0
 var total = 0
+var fileImported = 0
+var bar
+var totalBar
+var watchTimeout
 
 dat(src, dest, argv, function (archive, swarm, importProgress) {
   output[0][0] = 'Here we go!'
@@ -30,16 +38,20 @@ dat(src, dest, argv, function (archive, swarm, importProgress) {
     networkUI()
     log.print()
     if (archive.downloaded) {
+      log.clear()
       console.log('Done! Bye bye.')
       process.exit(0)
     }
-  }, 500)
+  }, 200)
   log.print()
 
   archive.once('content', function () {
-    output[0].push('') // add space for peers
     hasContent = true
+    imported = archive.content.byteLength
     if (!importProgress) downloadUI()
+  })
+  swarm.once('connection', function () {
+    output[0].push('') // add space for peers
   })
 
   if (!importProgress) {
@@ -47,40 +59,108 @@ dat(src, dest, argv, function (archive, swarm, importProgress) {
     return
   }
 
-  var bar
   output[0][0] = `dat://${archive.key.toString('hex')}`
 
-  importProgress.on('count', function (count) {
+  importProgress.once('count', function (count) {
     total = count.bytes
-    bar = progress({
-      total: total,
-      style: function (a, b) {
-        return `[${a}${b}] ${pretty(imported)}/${pretty(total)}`
-      }
-    })
-    output[1][0] = bar(imported)
-  })
-
-  importProgress.on('put-data', function (chunk) {
-    imported += chunk.length
-    if (bar) output[1][0] = bar(imported)
-    output[1][1] = pretty(indexSpeed(chunk.length)) + '/s'
-    if (argv.watch) output[1][2] = 'Watching for changes...'
+    if (!argv.watch) {
+      totalBar = progress({
+        total: total,
+        style: function (a, b) {
+          return `[${a}${b}] ${pretty(imported)} / ${pretty(total)}`
+        }
+      })
+      output[1][1] = totalBar(imported)
+      output[1].push('') // Import Speed
+      output[1].push('') // Spacer
+    }
+    updateImportTotal()
   })
 
   importProgress.on('put', function (src, dst) {
+    // Show progress for files only
+    if (src.stat.isDirectory()) return
+    clearTimeout(watchTimeout)
+
     var name = (dst.name === '/') ? src.name : dst.name // use prettier names if available
-    output[1][3] = `ADD: ${name}`
+    output[2][0] = `ADD: ${name}`
+    fileImported = 0
+
+    // Avoid flashing progress bar of small files
+    if (src.stat.size > Math.pow(10,7) ) {
+      bar = progress({
+        total: src.stat.size,
+        style: function (a, b) {
+          return `[${a}${b}] ${pretty(fileImported)} / ${pretty(src.stat.size)}`
+        }
+      })
+      output[2][1] = bar(fileImported)
+    }
   })
 
-  importProgress.on('del', function (src, dst) {
-    output[1][3] = `DEL: ${dst.name}`
+  importProgress.on('put-data', function (chunk, src, dst) {
+    imported += chunk.length
+    fileImported += chunk.length
+
+    if (bar) {
+      output[2][1] = bar(fileImported)
+      if (!totalBar) output[2][2] = `${pretty(indexSpeed(chunk.length))}/s`
+    }
+    updateImportTotal(chunk.length)
+  })
+
+  importProgress.on('put-end', function (src, dst) {
+    // Remove put file progress
+    if (bar) {
+      output[2][1] = ''
+      if (!totalBar) output[2][2] = ''
+    }
+    fileImported = 0
+    bar = null
+    updateImportTotal()
+
+    if (argv.watch) {
+      watchTimeout = setTimeout(function () {
+        if (argv.watch) output[2] = [''] // clear output for idle watching
+      }, 1200)
+    }
+  })
+
+  importProgress.on('del', function (dst) {
+    output[2][0] = `DEL: ${dst.name}`
+    clearTimeout(watchTimeout)
+
+    if (argv.watch) {
+      watchTimeout = setTimeout(function () {
+        if (argv.watch) output[2] = [''] // clear output for idle watching
+      }, 1200)
+    }
   })
 
   importProgress.on('end', function (src, dst) {
-    imported = total // TODO: end of put
-    output[1] = [`Import complete: ${pretty(total)}`]
+    // Only fires if argv.watch === false
+    totalBar = null
+    output[1] = [output[1][0]] // Clear total bar + import speed
+    output[2] = [`\nImport complete`]
+    setTimeout(function () {
+      output.pop()
+    }, 5000)
   })
+
+  function updateImportTotal (size) {
+    size = size || 0
+    var verb = !argv.watch
+      ? imported === total
+      ? 'Sharing'
+      : 'Importing to'
+    : 'Syncing'
+
+    output[1][0] = `${verb} Archive: ${archive.metadata.length - 1} files (${pretty(archive.content.byteLength)})`
+    if (totalBar) {
+      output[1][1] = totalBar(imported)
+      output[1][2] = `${pretty(indexSpeed(size))}/s`
+    }
+  }
 
   function downloadUI () {
     var bar = downloadBar()

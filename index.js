@@ -35,6 +35,24 @@ function run (src, dest, opts, cb) {
     cb(archive, swarm, progress)
   })
 
+  if (opts.sparse) {
+    if (typeof opts.sparse === 'string') {
+      downloadFiles(opts.sparse)
+    } else {
+      var syncFile = path.join(dest, '.datsync')
+      fs.readFile(syncFile, 'utf-8', function (err, data) {
+        if (err) throw err
+        data = data.split('\n')
+        downloadFiles(data)
+      })
+    }
+
+    function downloadFiles (list) {
+      console.log('downloading files', list)
+      // TODO
+    }
+  }
+
   function storage () {
     if (!opts.sleep) return ram
     if (typeof opts.sleep === 'string') return secretStore(opts.sleep)
