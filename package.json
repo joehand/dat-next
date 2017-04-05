@@ -19,7 +19,7 @@
   },
   "homepage": "https://github.com/joehand/dat-next#readme",
   "dependencies": {
-    "count-files": "^2.3.0",
+    "count-files": "^2.4.0",
     "dat-encoding": "^4.0.2",
     "dat-ignore": "1.0.0",
     "dat-secret-storage": "0.0.0",

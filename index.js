@@ -73,14 +73,15 @@ function run (src, dest, opts, cb) {
 
     progress = mirror(src, {name: '/', fs: archive}, {
       live: opts.watch,
-      ignore: ignore
+      ignore: ignore,
+      dereference: true
     })
 
     progress.on('error', function (err) {
       debug('IMPORT ERROR:', err)
     })
 
-    count(src, { ignore: ignore }, function (err, data) {
+    count(src, { ignore: ignore, dereference: true }, function (err, data) {
       if (err) return progress.emit('error', err)
       progress.emit('count', data)
     })
