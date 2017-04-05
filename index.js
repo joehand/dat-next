@@ -26,35 +26,22 @@ function run (src, dest, opts, cb) {
       return cb(new Error('Invalid dat link'))
     }
     src = null
+    opts.sparse = true
   }
 
+  var progress
+  var ignore = datIgnore(src || dest)
   var archive = hyperdrive(storage(), key, opts)
+
   archive.on('ready', function () {
-    var progress = importFiles()
+    if (archive.metadata.writable) importFiles()
+    else downloadFiles()
     var swarm = joinNetwork()
     cb(archive, swarm, progress)
   })
 
-  if (opts.sparse) {
-    if (typeof opts.sparse === 'string') {
-      downloadFiles(opts.sparse)
-    } else {
-      var syncFile = path.join(dest, '.datsync')
-      fs.readFile(syncFile, 'utf-8', function (err, data) {
-        if (err) throw err
-        data = data.split('\n')
-        downloadFiles(data)
-      })
-    }
-
-    function downloadFiles (list) {
-      console.log('downloading files', list)
-      // TODO
-    }
-  }
-
   function storage () {
-    if (!opts.sleep) return ram
+    if (opts.temp) return ram
     if (typeof opts.sleep === 'string') return secretStore(opts.sleep)
     if (!src) {
       mkdirp.sync(dest)
@@ -68,8 +55,6 @@ function run (src, dest, opts, cb) {
 
   function importFiles () {
     if (!archive.metadata.writable) return
-    var progress
-    var ignore = datIgnore(src)
 
     progress = mirror(src, {name: '/', fs: archive}, {
       live: opts.watch,
@@ -84,6 +69,35 @@ function run (src, dest, opts, cb) {
     count(src, { ignore: ignore, dereference: true }, function (err, data) {
       if (err) return progress.emit('error', err)
       progress.emit('count', data)
+    })
+
+    return progress
+  }
+
+  function downloadFiles () {
+    if (!archive.metadata.length) {
+      return archive.metadata.once('append', downloadFiles)
+    }
+
+    var length = archive.metadata.length
+    var progress = mirror({name: '/', fs: archive}, dest)
+    var changed = false
+
+    progress.on('put', function (src) {
+      changed = true
+    })
+
+    progress.on('del', function (src) {
+      changed = true
+    })
+
+    progress.on('end', function () {
+      if (!changed) {
+        if (length !== archive.metadata.length) downloadFiles()
+        else archive.metadata.once('append', downloadFiles)
+        return
+      }
+      archive.downloaded = true
     })
 
     return progress
