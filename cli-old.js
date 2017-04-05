@@ -87,7 +87,7 @@ dat(src, dest, argv, function (archive, swarm, progress) {
     fileImported = 0
 
     // Avoid flashing progress bar of small files
-    if (src.stat.size > Math.pow(10,7) ) {
+    if (src.stat.size > Math.pow(10, 7)) {
       bar = progressBar({
         total: src.stat.size,
         style: function (a, b) {

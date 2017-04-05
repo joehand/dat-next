@@ -57,7 +57,7 @@ function trackProgress (state, bus) {
   })
 
   function trackDownload () {
-    var progress = state.progress
+    // var progress = state.progress
     state.downloading = true
 
     // progress.on('put', function (src, dst) {
@@ -84,7 +84,6 @@ function trackProgress (state, bus) {
 
     progress.on('put', function (src, dst) {
       if (src.stat.isDirectory()) return
-      var name = (dst.name === '/') ? src.name : dst.name // use prettier names if available
       state.fileImport = {
         src: src,
         dst: dst,
