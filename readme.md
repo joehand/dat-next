@@ -17,29 +17,28 @@ npm install -g dat-next
 ### Share files:
 
 ```
-❯ dat-next my-data/ --sleep
+❯ dat-next my-data/ 
 dat://22607c7238e0cd74faa239d4119f32f455bb5bd555987090b2696dd0b090db38
 ```
 
 ### Download files:
 
 ```
-❯ dat-next my-data/ --sleep
+❯ dat-next my-data/
 
 ```
-
- files
 
 ### Share a directory:
 
 ```
 dat-next <dir> [options]
-    --sleep,-s     persist sleep files in .dat folder
+    --temp,-t     keep sleep data in memory
+    --watch, -w   watch folder for changes + auto import
 ```
 
 ### Download `key` to `dir`:
 
 ```
 dat-next <key> <dir> [options]
-    --sleep,-s     persist sleep files in .dat folder
+    --temp,-t     keep sleep data in memory
 ```
