@@ -34,6 +34,9 @@ function run (src, dest, opts, cb) {
   var archive = hyperdrive(storage(), key, opts)
 
   archive.on('ready', function () {
+    if (!archive.metadata.writable && !dest) {
+      return cb(new Error('Archive is not writable and no destination provided.'))
+    }
     if (archive.metadata.writable) importFiles()
     else downloadFiles()
     var swarm = joinNetwork()
