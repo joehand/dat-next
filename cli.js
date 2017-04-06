@@ -4,6 +4,7 @@ var minimist = require('minimist')
 var pretty = require('prettier-bytes')
 var speed = require('speedometer')
 var progress = require('progress-string')
+var cliTruncate = require('cli-truncate')
 var neatLog = require('neat-log')
 var output = require('neat-log/output')
 
@@ -219,9 +220,10 @@ function importUI (state) {
         }
       })
     }
+    var name = state.fileImport.dst.name
     return output`
 
-      ADD: ${state.fileImport.src.name}
+      ADD: ${cliTruncate(name, process.stdout.columns - 5, {position: 'start'})}
       ${state.fileImport.bar(state.fileImport.progress)}
     `
   }
