@@ -78,7 +78,6 @@ function run (src, dest, opts, cb) {
     if (!archive.metadata.length) {
       return archive.metadata.once('append', downloadFiles)
     }
-
     var length = archive.metadata.length
     var progress = mirror({name: '/', fs: archive}, dest)
     var changed = false

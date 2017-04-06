@@ -34,6 +34,7 @@
     "mirror-folder": "^1.2.2",
     "mkdirp": "^0.5.1",
     "neat-log": "^1.0.0",
+    "os-homedir": "^1.0.2",
     "prettier-bytes": "^1.0.3",
     "progress-string": "^1.2.1",
     "random-access-memory": "^2.3.0",
