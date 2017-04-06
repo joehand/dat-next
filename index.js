@@ -40,7 +40,7 @@ function run (src, dest, opts, cb) {
     if (archive.metadata.writable) importFiles()
     else downloadFiles()
     var swarm = joinNetwork()
-    cb(archive, swarm, progress)
+    cb(null, archive, swarm, progress)
   })
 
   function storage () {

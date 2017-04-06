@@ -30,7 +30,11 @@ function runDat (state, bus) {
   state.title = 'Starting Dat program...'
   bus.emit('render')
 
-  dat(src, dest, argv, function (archive, network, progress) {
+  dat(src, dest, argv, function (err, archive, network, progress) {
+    if (err) {
+      console.error(err)
+      process.exit(1)
+    }
     state.archive = archive
     state.network = network
     state.progress = progress
