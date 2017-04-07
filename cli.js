@@ -77,12 +77,18 @@ function trackProgress (state, bus) {
   function trackImport () {
     var progress = state.progress
 
+    var counting = setInterval(function () {
+      // Update file count while we are going (for big dirs)
+      bus.emit('render')
+    }, 200)
+
     state.importing = true
     state.import = {
       progress: state.archive.content.byteLength // ? is this what I want
     }
 
     progress.on('count', function (count) {
+      clearInterval(counting)
       state.count = count
       bus.emit('render')
     })
@@ -159,8 +165,9 @@ function archiveUI (state) {
   if (!state.archive) return `Starting...`
   var archive = state.archive
   var size = archive.content ? archive.content.byteLength : 0
+  var files = archive.metadata.length - 1
   return output`
-    ${state.downloading ? 'Downloading' : 'Syncing'} Archive: ${archive.metadata.length - 1} files (${pretty(size)})
+    ${state.downloading ? 'Downloading' : 'Syncing'} Archive: ${files} files (${pretty(size)})
   `
 }
 
@@ -192,7 +199,7 @@ function downloadUI (state) {
 }
 
 function importUI (state) {
-  if (!state.count) return
+  if (!state.count) return `\nStarting import of ${state.progress.count.files} files ... (${pretty(state.progress.count.bytes)})`
   if (state.import.progress === state.count.bytes) return '\nAll files imported.'
   if (!state.totalBar) {
     var total = state.count.bytes

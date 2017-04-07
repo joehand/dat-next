@@ -69,7 +69,7 @@ function run (src, dest, opts, cb) {
       debug('IMPORT ERROR:', err)
     })
 
-    count(src, { ignore: ignore, dereference: true }, function (err, data) {
+    progress.count = count(src, { ignore: ignore, dereference: true }, function (err, data) {
       if (err) return progress.emit('error', err)
       progress.emit('count', data)
     })
