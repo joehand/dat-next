@@ -7,6 +7,7 @@ var progress = require('progress-string')
 var cliTruncate = require('cli-truncate')
 var neatLog = require('neat-log')
 var output = require('neat-log/output')
+var networkSpeed = require('hyperdrive-network-speed')
 
 var dat = require('./')
 
@@ -62,16 +63,12 @@ function trackProgress (state, bus) {
   })
 
   function trackDownload () {
-    // var progress = state.progress
+    var progress = state.progress
     state.downloading = true
-
-    // progress.on('put', function (src, dst) {
-    //   state.fileDownload = {
-    //     src: src,
-    //     dst: dst,
-    //     progress: 0
-    //   }
-    // })
+    state.archive.content.on('sync', function () {
+      state.nsync = true
+      bus.emit('render')
+    })
   }
 
   function trackImport () {
@@ -136,14 +133,13 @@ function trackNetwork (state, bus) {
       })
     })
 
-    archive.content.on('upload', function (index, data) {
-      state.uploadSpeed = uploadSpeed(data.length)
+    var speed = networkSpeed(archive)
+
+    setInterval(function () {
+      state.uploadSpeed = speed.uploadSpeed
+      state.downloadSpeed = speed.downloadSpeed
       bus.emit('render')
-    })
-    archive.content.on('download', function (index, data) {
-      state.downloadSpeed = downloadSpeed(data.length)
-      bus.emit('render')
-    })
+    }, 500)
   })
 }
 
@@ -192,6 +188,13 @@ function networkUI (state) {
 }
 
 function downloadUI (state) {
+  if (state.nsync) {
+    return output`
+
+      Archive up to date with latest.
+      Exit if you'd like.
+    `
+  }
   return output`
 
     Download progress TODO
