@@ -1,9 +1,8 @@
 var fs = require('fs')
 var ram = require('random-access-memory')
-var secretStore = require('dat-secret-storage')
+// var secretStore = require('dat-secret-storage')
 var datStore = require('dat-storage')
 var mkdirp = require('mkdirp')
-var debug = require('debug')('dat-storage')
 
 module.exports = storage
 
@@ -22,7 +21,7 @@ function storage (dir, opts) {
     throw e
   }
 
-  function error() {
+  function error () {
     // TODO: single file sleep storage
     throw new Error('Specify dir for sleep files: --sleep <dir>')
   }

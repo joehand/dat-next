@@ -7,7 +7,6 @@ var progress = require('progress-string')
 var cliTruncate = require('cli-truncate')
 var neatLog = require('neat-log')
 var output = require('neat-log/output')
-var networkSpeed = require('hyperdrive-network-speed')
 
 var dat = require('./')
 
@@ -19,8 +18,6 @@ var argv = minimist(process.argv.slice(2), {
 var src = argv._[0] || process.cwd()
 var dest = argv._[1]
 var indexSpeed = speed()
-var downloadSpeed = speed()
-var uploadSpeed = speed()
 
 var neat = neatLog([mainView, progressView], {logspeed: 200}) // todo: opts.debug
 neat.use(runDat)
@@ -31,24 +28,28 @@ function runDat (state, bus) {
   state.title = 'Starting Dat program...'
   bus.emit('render')
 
-  dat(src, dest, argv, function (err, archive, network, progress) {
+  dat(src, dest, argv, function (err, dat) {
     if (err) {
-      console.error(err)
+      console.error('ERROR:', err)
       process.exit(1)
     }
-    state.archive = archive
-    state.network = network
-    state.progress = progress
-    state.writable = archive.metadata.writable
-    archive.once('content', function () {
+    state.archive = dat.archive
+    state.network = dat.network
+    state.importer = dat.importer
+    state.stats = dat.stats
+    state.writable = dat.writable
+    if (dat.archive.content) {
       bus.emit('archive:content')
-      bus.emit('render')
-    })
-    archive.metadata.on('append', function () {
+    } else {
+      dat.archive.once('content', function () {
+        bus.emit('archive:content')
+      })
+    }
+    dat.archive.metadata.on('append', function () {
       bus.emit('render')
     })
 
-    if (state.writable) state.title = `dat://${archive.key.toString('hex')}`
+    if (dat.writable) state.title = `dat://${dat.key.toString('hex')}`
     else state.title = 'Dat Download'
 
     bus.emit('archive')
@@ -58,12 +59,11 @@ function runDat (state, bus) {
 
 function trackProgress (state, bus) {
   bus.on('archive:content', function () {
-    if (state.writable) trackImport()
+    if (state.archive.metadata.writable) trackImport()
     else trackDownload()
   })
 
   function trackDownload () {
-    var progress = state.progress
     state.downloading = true
     state.archive.content.on('sync', function () {
       state.nsync = true
@@ -72,7 +72,7 @@ function trackProgress (state, bus) {
   }
 
   function trackImport () {
-    var progress = state.progress
+    var progress = state.importer
 
     var counting = setInterval(function () {
       // Update file count while we are going (for big dirs)
@@ -123,7 +123,6 @@ function trackProgress (state, bus) {
 
 function trackNetwork (state, bus) {
   bus.on('archive:content', function () {
-    var archive = state.archive
     var network = state.network
 
     network.on('connection', function (peer) {
@@ -133,7 +132,7 @@ function trackNetwork (state, bus) {
       })
     })
 
-    var speed = networkSpeed(archive)
+    var speed = state.stats.network
 
     setInterval(function () {
       state.uploadSpeed = speed.uploadSpeed
@@ -153,7 +152,7 @@ function mainView (state) {
 
 function progressView (state) {
   if (state.downloading) return downloadUI(state)
-  else if (state.importing) return importUI(state)
+  else if (state.importer) return importUI(state)
   return ''
 }
 
@@ -202,7 +201,7 @@ function downloadUI (state) {
 }
 
 function importUI (state) {
-  if (!state.count) return `\nStarting import of ${state.progress.count.files} files ... (${pretty(state.progress.count.bytes)})`
+  if (!state.count) return `\nStarting import of ${state.importer.count.files} files ... (${pretty(state.importer.count.bytes)})`
   if (state.import.progress === state.count.bytes) return '\nAll files imported.'
   if (!state.totalBar) {
     var total = state.count.bytes
