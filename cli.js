@@ -194,9 +194,28 @@ function downloadUI (state) {
       Exit if you'd like.
     `
   }
+  if (!state.downloaded) {
+    var feed = state.archive.content
+    state.downloaded = 0
+    for (var i = 0; i < feed.length; i++) {
+      if (feed.has(i)) state.downloaded++
+    }
+    state.archive.content.on('download', function () {
+      state.downloaded += 1
+    })
+  }
+  if (!state.downloadBar) {
+    var total = state.stats.get().blocksTotal
+    state.downloadBar = progress({
+      total: total,
+      style: function (a, b) {
+        return `[${a}${b}] ${(100 * state.downloaded / total).toFixed(2)}%`
+      }
+    })
+  }
   return output`
 
-    Download progress TODO
+    ${state.downloadBar(state.downloaded)}
   `
 }
 
