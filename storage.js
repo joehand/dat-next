@@ -8,7 +8,7 @@ module.exports = storage
 
 function storage (dir, opts) {
   if (opts.temp) return ram
-  if (typeof opts.sleep === 'string') return datStore(opts.sleep)
+  if (typeof opts.sleep === 'string') return opts.sleep
   // if (typeof opts.sleep === 'string') return secretStore(datStore(opts.sleep))
 
   mkdirp.sync(dir)
