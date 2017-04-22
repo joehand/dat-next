@@ -2,6 +2,12 @@
   "name": "dat-next",
   "version": "2.3.7",
   "description": "Next version of the Dat CLI client",
+  "keywords": [
+    "optimization",
+    "speed",
+    "simplicity",
+    "security"
+  ],
   "bin": {
     "dat-next": "cli.js"
   },
