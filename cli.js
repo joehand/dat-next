@@ -13,23 +13,29 @@ var dat = require('./')
 process.title = 'dat-next'
 
 var argv = minimist(process.argv.slice(2), {
-  alias: {temp: 't', quiet: 'q', watch: 'w', sleep: 's'}
+  alias: {temp: 't', help: 'h', watch: 'w', sleep: 's'}
 })
+
+if (argv.help) return usage()
+
 var src = argv._[0] || process.cwd()
 var dest = argv._[1]
 var indexSpeed = speed()
+var logspeed = 200
 
-var neat = neatLog([mainView, progressView], {logspeed: 200}) // todo: opts.debug
+var neat = neatLog([mainView, progressView], {logspeed: logspeed})
 neat.use(runDat)
 neat.use(trackNetwork)
 neat.use(trackProgress)
 
 function runDat (state, bus) {
+
   state.title = 'Starting Dat program...'
   bus.emit('render')
 
   dat(src, dest, argv, function (err, dat) {
     if (err) {
+      bus.clear()
       console.error('ERROR:', err)
       process.exit(1)
     }
@@ -50,7 +56,7 @@ function runDat (state, bus) {
     })
 
     if (dat.writable) state.title = `dat://${dat.key.toString('hex')}`
-    else state.title = 'Dat Download'
+    else state.title = 'Dat!'
 
     bus.emit('archive')
     bus.emit('render')
@@ -65,8 +71,28 @@ function trackProgress (state, bus) {
 
   function trackDownload () {
     state.downloading = true
-    state.archive.content.on('sync', function () {
+    state.modified = false
+
+    state.archive.content.on('clear', function () {
+      state.modified = true
+    })
+
+    state.archive.content.on('download', function (index, data) {
+      state.modified = true
+    })
+
+    state.archive.on('sync', function () {
       state.nsync = true
+      if (state.modified && !argv.live) {
+        state.downloadExit = true
+        bus.render()
+        process.exit()
+      }
+      bus.emit('render')
+    })
+
+    state.archive.on('update', function () {
+      state.nsync = false
       bus.emit('render')
     })
   }
@@ -77,7 +103,7 @@ function trackProgress (state, bus) {
     var counting = setInterval(function () {
       // Update file count while we are going (for big dirs)
       bus.emit('render')
-    }, 200)
+    }, logspeed)
 
     state.importing = true
     state.import = {
@@ -138,7 +164,7 @@ function trackNetwork (state, bus) {
       state.uploadSpeed = speed.uploadSpeed
       state.downloadSpeed = speed.downloadSpeed
       bus.emit('render')
-    }, 500)
+    }, logspeed)
   })
 }
 
@@ -167,7 +193,8 @@ function archiveUI (state) {
 }
 
 function networkUI (state) {
-  if (!state.network) return ''
+  // state.exiting = last render before download exit
+  if (!state.network || state.downloadExit) return ''
   if (!state.network.connected || !state.archive.content) {
     if (state.writable) return '\nWaiting for Connections...'
     return '\nConnecting...'
@@ -181,7 +208,8 @@ function networkUI (state) {
   function speed () {
     var output = ''
     if (state.uploadSpeed) output += `Uploading ${pretty(state.uploadSpeed)}/s`
-    if (state.downloadSpeed) output += `Downloading ${pretty(state.downloadSpeed)}/s`
+    // !state.nsync hack so speed doesn't display when done
+    if (!state.nsync && state.downloadSpeed) output += `Downloading ${pretty(state.downloadSpeed)}/s`
     return output
   }
 }
@@ -191,8 +219,11 @@ function downloadUI (state) {
     return output`
 
       Archive up to date with latest.
-      Exit if you'd like.
+      ${argv.live ? 'Waiting for updates ...' : ''}
     `
+  }
+  if (!state.stats.get().blocksTotal) {
+    return '' // no metadata yet
   }
   if (!state.downloaded) {
     var feed = state.archive.content
@@ -204,7 +235,17 @@ function downloadUI (state) {
       state.downloaded += 1
     })
   }
+
   if (!state.downloadBar) {
+    makeBar()
+    state.archive.metadata.update(makeBar)
+  }
+  return output`
+
+    ${state.downloadBar(state.downloaded)}
+  `
+
+  function makeBar () {
     var total = state.stats.get().blocksTotal
     state.downloadBar = progress({
       total: total,
@@ -213,10 +254,6 @@ function downloadUI (state) {
       }
     })
   }
-  return output`
-
-    ${state.downloadBar(state.downloaded)}
-  `
 }
 
 function importUI (state) {
@@ -241,12 +278,13 @@ function importUI (state) {
   `
 
   function fileImport () {
-    if (!state.fileImport) return ``
+    if (!state.fileImport) return ''
     if (state.fileImport.type === 'del') return `\nDEL: ${state.fileImport.src.name}`
     if (!state.fileImport.bar) {
       var total = state.fileImport.src.stat.size
       state.fileImport.bar = progress({
         total: total,
+        width: 35,
         style: function (a, b) {
           return `[${a}${b}] ${pretty(state.fileImport.progress)} / ${pretty(total)}`
         }
@@ -259,4 +297,11 @@ function importUI (state) {
       ${state.fileImport.bar(state.fileImport.progress)}
     `
   }
+}
+
+function usage () {
+  console.error('dat-next!')
+  console.error('  dat-next <dir>         SHARE directory')
+  console.error('  dat-next <key> <dir>   DOWNLOAD key to dir (directory required)')
+  process.exit(0)
 }

@@ -13,7 +13,9 @@ module.exports = run
  * @param  {Function} cb    callback(err, archive, swarm, progress)
  */
 function run (src, dest, opts, cb) {
-  if (!opts) opts = {}
+  opts = Object.assign({
+    latest: true
+  }, opts)
 
   if (dest) {
     // Downloading
@@ -24,6 +26,7 @@ function run (src, dest, opts, cb) {
       return cb(new Error('Invalid dat link'))
     }
     src = null
+    opts.secretKey = false // turns off dat secret storage for local download testing
   } else {
     opts.indexing = true
   }
