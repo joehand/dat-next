@@ -9,7 +9,7 @@ Current version at [datproject/dat](https://github.com/datproject/dat).
 ## Install:
 
 ```
-npm install -g joehand/dat-next
+npm install -g dat-next
 ```
 
 ## Usage
