@@ -64,7 +64,7 @@ function runDat (state, bus) {
 }
 
 function trackProgress (state, bus) {
-  bus.on('archive:content', function () {
+  bus.once('archive:content', function () {
     if (state.archive.metadata.writable) trackImport()
     else trackDownload()
   })
@@ -73,12 +73,19 @@ function trackProgress (state, bus) {
     state.downloading = true
     state.modified = false
 
+    var feed = state.archive.content
+    state.downloaded = 0
+    for (var i = 0; i < feed.length; i++) {
+      if (feed.has(i)) state.downloaded++
+    }
+
     state.archive.content.on('clear', function () {
       state.modified = true
     })
 
     state.archive.content.on('download', function (index, data) {
       state.modified = true
+      state.downloaded += 1
     })
 
     state.archive.on('sync', function () {
@@ -225,17 +232,6 @@ function downloadUI (state) {
   if (!state.stats.get().blocksTotal) {
     return '' // no metadata yet
   }
-  if (!state.downloaded) {
-    var feed = state.archive.content
-    state.downloaded = 0
-    for (var i = 0; i < feed.length; i++) {
-      if (feed.has(i)) state.downloaded++
-    }
-    state.archive.content.on('download', function () {
-      state.downloaded += 1
-    })
-  }
-
   if (!state.downloadBar) {
     makeBar()
     state.archive.metadata.update(makeBar)
