@@ -140,12 +140,12 @@ function trackProgress (state, bus) {
     })
 
     progress.on('put-end', function (src, dst) {
-      state.fileImport = null
+      // state.fileImport = null
       bus.emit('render')
     })
 
     progress.on('end', function (src, dst) {
-      state.fileImport = null
+      // state.fileImport = null
       bus.emit('render')
     })
   }
