@@ -9,7 +9,7 @@ var neatLog = require('neat-log')
 var output = require('neat-log/output')
 var view = require('./ui')
 
-var dat = require('./')
+var Dat = require('./')
 
 process.title = 'dat-next'
 
@@ -37,7 +37,7 @@ function runDat (state, bus) {
   state.title = 'Starting Dat program...'
   bus.emit('render')
 
-  dat(src, dest, argv, function (err, dat) {
+  Dat(src, dest, argv, function (err, dat) {
     if (err) {
       bus.clear()
       console.error('ERROR:', err)
