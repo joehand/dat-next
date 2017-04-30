@@ -21,7 +21,7 @@
   "dependencies": {
     "cli-truncate": "^1.0.0",
     "dat-encoding": "^4.0.2",
-    "dat-node": "^3.0.0",
+    "dat-node": "github:datproject/dat-node#import-fixes",
     "dat-storage": "^1.0.0",
     "debug": "^2.4.5",
     "minimist": "^1.2.0",
