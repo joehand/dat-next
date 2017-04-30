@@ -21,7 +21,7 @@ if (argv.help) return usage()
 var src = argv._[0] || process.cwd()
 var dest = argv._[1]
 var indexSpeed = speed()
-var logspeed = 200
+var logspeed = argv.logspeed || 400
 
 var neat = neatLog([mainView, progressView], {logspeed: logspeed})
 neat.use(runDat)
