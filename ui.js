@@ -71,7 +71,8 @@ function downloadUI (state) {
       ${state.opts.live ? 'Waiting for changes...' : ''}
     `
   }
-  if (!state.downloaded) {
+  var stats = state.stats.get()
+  if (!stats.downloaded) {
     return '' // no metadata yet
   }
   if (!state.downloadBar) {
@@ -80,15 +81,15 @@ function downloadUI (state) {
   }
   return output`
 
-    ${state.downloadBar(state.downloaded)}
+    ${state.downloadBar(stats.downloaded)}
   `
 
   function makeBar () {
-    var total = state.archive.content.length
+    var total = stats.length
     state.downloadBar = progress({
       total: total,
       style: function (a, b) {
-        return `[${a}${b}] ${(100 * state.downloaded / total).toFixed(2)}%`
+        return `[${a}${b}] ${(100 * stats.downloaded / total).toFixed(2)}%`
       }
     })
   }

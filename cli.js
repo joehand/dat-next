@@ -83,19 +83,12 @@ function trackProgress (state, bus) {
     state.downloading = true
     state.modified = false
 
-    var feed = state.archive.content
-    state.downloaded = 0
-    for (var i = 0; i < feed.length; i++) {
-      if (feed.has(i)) state.downloaded++
-    }
-
     state.archive.content.on('clear', function () {
       state.modified = true
     })
 
     state.archive.content.on('download', function (index, data) {
       state.modified = true
-      state.downloaded++
     })
 
     state.archive.on('sync', function () {
