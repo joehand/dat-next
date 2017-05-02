@@ -54,9 +54,10 @@ function networkUI (state) {
 
   function speed () {
     var output = ''
-    if (state.uploadSpeed) output += `Uploading ${pretty(state.uploadSpeed)}/s`
-    // !state.nsync hack so speed doesn't display when done
-    if (!state.nsync && state.downloadSpeed) output += `Downloading ${pretty(state.downloadSpeed)}/s`
+    var upSpeed = state.uploadSpeed || 0
+    var downSpeed = state.downloadSpeed || 0
+    output += `Uploading ${pretty(upSpeed)}/s `
+    output += `Downloading ${pretty(downSpeed)}/s`
     if (output.length) output = '| ' + output
     return output
   }
