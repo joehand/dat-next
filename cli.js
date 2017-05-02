@@ -7,6 +7,7 @@ var progress = require('progress-string')
 var cliTruncate = require('cli-truncate')
 var neatLog = require('neat-log')
 var output = require('neat-log/output')
+var debug = require('debug')('dat-next')
 var view = require('./ui')
 
 var Dat = require('./')
@@ -26,8 +27,13 @@ if (argv.help) return usage()
 var src = argv._[0] || process.cwd()
 var dest = argv._[1]
 var logspeed = argv.logspeed || 400
+var quiet = debug.enabled || !!process.env.DEBUG
 
-var neat = neatLog([view.main, view.progress], {logspeed: logspeed})
+
+var neat = neatLog([view.main, view.progress], {
+  logspeed: logspeed,
+  quiet: quiet
+})
 neat.use(runDat)
 neat.use(trackNetwork)
 neat.use(trackProgress)
