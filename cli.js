@@ -22,12 +22,12 @@ var argv = minimist(process.argv.slice(2), {
   }
 })
 
-if (argv.help) return usage()
-
 var src = argv._[0] || process.cwd()
 var dest = argv._[1]
 var logspeed = argv.logspeed || 400
 var quiet = debug.enabled || !!process.env.DEBUG
+
+if (!argv._.length || argv.help) return usage()
 
 
 var neat = neatLog([view.main, view.progress], {

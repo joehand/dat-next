@@ -14,20 +14,6 @@ npm install -g dat-next
 
 ## Usage
 
-### Share files:
-
-```
-❯ dat-next my-data/ 
-dat://22607c7238e0cd74faa239d4119f32f455bb5bd555987090b2696dd0b090db38
-```
-
-### Download files:
-
-```
-❯ dat-next my-data/
-
-```
-
 ### Share a directory:
 
 ```
@@ -40,5 +26,5 @@ dat-next <dir> [options]
 
 ```
 dat-next <key> <dir> [options]
-    --temp,-t     keep sleep data in memory
+    --live     keep running + update changes
 ```
