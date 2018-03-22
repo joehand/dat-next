@@ -28,7 +28,7 @@ function run (src, dest, opts, cb) {
       return cb(new Error('Not archive owner and no destination provided.'))
     }
 
-    dat.joinNetwork(opts)
+    dat.joinNetwork()
     // TODO
     // dat.trackStats()
     // if (dat.owner) {
