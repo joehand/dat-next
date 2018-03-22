@@ -40,12 +40,14 @@ function runDat () {
     }
 
     var network = dat.joinNetwork()
-    network.once('connection', function () {
-      console.log('new connection')
-    })
 
     if (dat.owner) share()
-    else download()
+    else {
+      network.once('connection', function () {
+        console.log('connected to peer!')
+        download()
+      })
+    }
 
     function download () {
       console.log(`Downloading: ${dat.key.toString('hex')}`)
@@ -60,7 +62,10 @@ function runDat () {
     }
 
     function share () {
-      console.log('sharing', path.resolve(src))
+      network.on('connection', function () {
+        console.log('new connection')
+      })
+      console.log('Sharing', path.resolve(src))
 
       var progress = dat.importFiles(src, {
         ignore: ['node_modules', '.dat']
@@ -72,7 +77,7 @@ function runDat () {
         console.log('Added', dest.name)
       })
 
-      console.log(`Sharing: ${dat.key.toString('hex')}\n`)
+      console.log(`KEY: ${dat.key.toString('hex')}\n`)
     }
   })
 }

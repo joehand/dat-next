@@ -19,6 +19,8 @@ function run (src, dest, opts, cb) {
       return cb(new Error('Invalid dat link'))
     }
     src = null
+
+    opts.sparse = true
     opts.temp= true // use memory for downloads right now
   }
 
@@ -28,7 +30,6 @@ function run (src, dest, opts, cb) {
       return cb(new Error('Not archive owner and no destination provided.'))
     }
 
-    dat.joinNetwork()
     // TODO
     // dat.trackStats()
     // if (dat.owner) {
