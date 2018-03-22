@@ -2,7 +2,7 @@
 
 The next version of the `dat` command line tool.
 
-**WITH SLEEP!!**  😴
+**WITH HYPERDB!!** 🌟
 
 Current version at [datproject/dat](https://github.com/datproject/dat).
 

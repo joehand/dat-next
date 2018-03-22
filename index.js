@@ -5,16 +5,9 @@ var storage = require('./storage')
 
 module.exports = run
 
-/**
- * Run dat-next
- * @param  {string}   src   directory or key (for downloading)
- * @param  {string}   dest  directory to download to, required for download
- * @param  {object}   opts  options
- * @param  {Function} cb    callback(err, archive, swarm, progress)
- */
 function run (src, dest, opts, cb) {
   opts = Object.assign({
-    latest: true
+    latest: false
   }, opts)
 
   if (dest) {
@@ -26,25 +19,24 @@ function run (src, dest, opts, cb) {
       return cb(new Error('Invalid dat link'))
     }
     src = null
-    opts.secretKey = false // turns off dat secret storage for local download testing
-  } else {
-    opts.indexing = true
+    opts.temp= true // use memory for downloads right now
   }
 
   Dat(storage(src || dest, opts), opts, function (err, dat) {
     if (err) return cb(err)
-    if (!dat.writable && !dest) {
-      return cb(new Error('Archive is not writable and no destination provided.'))
+    if (!dat.owner && !dest) {
+      return cb(new Error('Not archive owner and no destination provided.'))
     }
 
     dat.joinNetwork(opts)
-    dat.trackStats()
-    if (dat.writable) {
-      dat.importFiles(src, {
-        watch: opts.watch,
-        dereference: true
-      })
-    }
+    // TODO
+    // dat.trackStats()
+    // if (dat.owner) {
+    //   dat.importFiles(src, {
+    //     watch: opts.watch,
+    //     dereference: true
+    //   })
+    // }
 
     cb(null, dat)
   })

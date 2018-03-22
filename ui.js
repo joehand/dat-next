@@ -9,35 +9,35 @@ module.exports = {
 }
 
 function mainView (state) {
-  return output`
+  return output(`
     ${state.title}
     ${archiveUI(state)}
     ${networkUI(state)}
-  `
+  `)
 }
 
 function progressView (state) {
   if (state.downloading) return downloadUI(state)
   else if (state.importer) {
-    return output`
+    return output(`
 
       ${importUI(state)}
       ${fileImport(state)}
-    `
+    `)
   }
   return ''
 }
 
 function archiveUI (state) {
-  if (!state.archive) return ''
+  if (!state.archive || !state.stats) return ''
   var archive = state.archive
 
   var stats = state.stats.get()
   var size = stats.byteLength || 0
   var files = stats.files
-  return output`
+  return output(`
     ${state.downloading ? 'Downloading' : 'Syncing'} Archive: ${files} files (${pretty(size)})
-  `
+  `)
 }
 
 function networkUI (state) {
@@ -47,29 +47,29 @@ function networkUI (state) {
     if (state.writable) return '\nNo Connections'// '\nWaiting for Connections...'
     return '\nConnecting...'
   }
-  return output`
+  return output(`
 
     ${state.archive.content.peers.length} peers ${speed()}
-  `
+  `)
 
   function speed () {
-    var output = ''
+    var display = ''
     var upSpeed = state.uploadSpeed || 0
     var downSpeed = state.downloadSpeed || 0
-    output += `Uploading ${pretty(upSpeed)}/s `
-    output += `Downloading ${pretty(downSpeed)}/s`
-    if (output.length) output = '| ' + output
-    return output
+    display += `Uploading ${pretty(upSpeed)}/s `
+    display += `Downloading ${pretty(downSpeed)}/s`
+    if (display.length) display = '| ' + display
+    return display
   }
 }
 
 function downloadUI (state) {
   if (state.nsync) {
-    return output`
+    return output(`
 
       Archive up to date.
       ${state.opts.live ? 'Waiting for changes...' : ''}
-    `
+    `)
   }
   var stats = state.stats.get()
   if (!stats.downloaded) {
@@ -79,10 +79,10 @@ function downloadUI (state) {
     makeBar()
     state.archive.on('update', makeBar)
   }
-  return output`
+  return output(`
 
     ${state.downloadBar(stats.downloaded)}
-  `
+  `)
 
   function makeBar () {
     var total = stats.length
@@ -105,10 +105,10 @@ function importUI (state) {
   } else {
     if (!state.importer.count.files) return `Checking for file updates ...`
       var indexSpeed = state.importer.indexSpeed ? `(${pretty(state.importer.indexSpeed)}/s)` : ''
-    return output`
+    return output(`
       Imported ${state.importer.putDone.files} of ${state.importer.count.files} files ${indexSpeed}
       (Calculating total import count...)
-    `
+    `)
   }
 
   var total = state.count.bytes
@@ -119,10 +119,10 @@ function importUI (state) {
     }
   })
 
-  return output`
+  return output(`
     Importing ${state.count.files} files to Archive (${pretty(state.importer.indexSpeed)}/s)
     ${totalBar(state.importer.putDone.bytes)}
-  `
+  `)
 }
 
 function fileImport (state) {
@@ -143,9 +143,9 @@ function fileImport (state) {
   // >500 mb show progress to
   if (total < 5e8) size = `(${pretty(total)})`
   else size = `(${pretty(state.fileImport.progress)} / ${pretty(total)})`
-  return output`
+  return output(`
 
     ADD: ${cliTruncate(name, process.stdout.columns - 7 - size.length, {position: 'start'})} ${size}
-  `
+  `)
   // ${bar(state.fileImport.progress)}
 }
