@@ -5,14 +5,13 @@ var output = require('neat-log/output')
 
 module.exports = {
   main: mainView,
-  progress: progressView
+  network: networkUI
 }
 
 function mainView (state) {
   return output(`
     ${state.title}
-    ${archiveUI(state)}
-    ${networkUI(state)}
+    ${state.importSpeed ? pretty(state.importSpeed) : 0}/s
   `)
 }
 
@@ -28,17 +27,17 @@ function progressView (state) {
   return ''
 }
 
-function archiveUI (state) {
-  if (!state.archive || !state.stats) return ''
-  var archive = state.archive
+// function archiveUI (state) {
+//   if (!state.archive || !state.stats) return ''
+//   var archive = state.archive
 
-  var stats = state.stats.get()
-  var size = stats.byteLength || 0
-  var files = stats.files
-  return output(`
-    ${state.downloading ? 'Downloading' : 'Syncing'} Archive: ${files} files (${pretty(size)})
-  `)
-}
+//   var stats = state.stats.get()
+//   var size = stats.byteLength || 0
+//   var files = stats.files
+//   return output(`
+//     ${state.downloading ? 'Downloading' : 'Syncing'} Archive: ${files} files (${pretty(size)})
+//   `)
+// }
 
 function networkUI (state) {
   // state.exiting = last render before download exit
@@ -49,7 +48,7 @@ function networkUI (state) {
   }
   return output(`
 
-    ${state.archive.content.peers.length} peers ${speed()}
+    ${state.archive.db.peers.length} peers
   `)
 
   function speed () {

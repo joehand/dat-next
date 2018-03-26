@@ -30,20 +30,33 @@ var quiet = debug.enabled || !!process.env.DEBUG
 
 if (!argv._.length || argv.help) return usage()
 
-runDat()
+var neat = neatLog([view.main, view.network], {
+  logspeed: logspeed,
+  quiet: quiet
+})
+neat.use(runDat)
+neat.use(trackNetwork)
 
-function runDat () {
+function runDat (state, bus) {
+  state.opts = argv
+  state.title = 'Starting Dat program...'
+  bus.emit('render')
+
   Dat(src, dest, argv, function (err, dat) {
     if (err) {
       console.error('ERROR:', err)
       process.exit(1)
     }
+    state.title = 'Running Dat'
 
-    var network = dat.joinNetwork()
+    state.archive = dat.archive
+    // state.stats = dat.trackStats()
+    state.network = dat.joinNetwork()
+    bus.emit('network')
 
     if (dat.owner) share()
     else {
-      network.once('connection', function () {
+      state.network.once('connection', function () {
         console.log('connected to peer!')
         download()
       })
@@ -62,10 +75,7 @@ function runDat () {
     }
 
     function share () {
-      network.on('connection', function () {
-        console.log('new connection')
-      })
-      console.log('Sharing', path.resolve(src))
+      // console.log('Sharing', path.resolve(src))
 
       var progress = dat.importFiles(src, {
         ignore: ['node_modules', '.dat']
@@ -73,12 +83,38 @@ function runDat () {
         if (err) throw err
         console.log('Done importing')
       })
+      var importSpeed = speed()
+      progress.on('put-data', function (chunk, src, dst) {
+        state.importSpeed = importSpeed(chunk.length)
+        bus.emit('render')
+      })
       progress.on('put', function (src, dest) {
-        console.log('Added', dest.name)
+        // console.log('Added', dest.name)
       })
 
-      console.log(`KEY: ${dat.key.toString('hex')}\n`)
+      // console.log(`KEY: ${dat.key.toString('hex')}\n`)
     }
+  })
+}
+
+function trackNetwork (state, bus) {
+  bus.on('network', function () {
+    var network = state.network
+
+    network.on('connection', function (peer) {
+      bus.emit('render')
+      peer.on('close', function () {
+        bus.emit('render')
+      })
+    })
+
+    // var speed = state.stats.network
+
+    // setInterval(function () {
+    //   state.uploadSpeed = speed.uploadSpeed
+    //   state.downloadSpeed = speed.downloadSpeed
+    //   bus.emit('render')
+    // }, logspeed)
   })
 }
 
