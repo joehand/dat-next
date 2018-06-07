@@ -19,7 +19,7 @@ var argv = minimist(process.argv.slice(2), {
   alias: {temp: 't', help: 'h', watch: 'w', sleep: 's'},
   boolean: ['watch'],
   default: {
-    'watch' : true
+    // 'watch' : true
   }
 })
 
@@ -45,21 +45,12 @@ function runDat () {
     else {
       network.once('connection', function () {
         console.log('connected to peer!')
-        download()
+        dat.archive.db.source.on('sync', function () {
+          console.log('Downloaded')
+        })
       })
     }
 
-    function download () {
-      console.log(`Downloading: ${dat.key.toString('hex')}`)
-      console.log('to:', path.resolve(dest), '\n')
-      var progress = mirror({fs: dat.archive, name: '/'}, dest, function (err) {
-        if (err) throw err
-        console.log('Done')
-      })
-      progress.on('put', function (src) {
-        console.log('Downloading', src.name)
-      })
-    }
 
     function share () {
       network.on('connection', function () {

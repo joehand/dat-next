@@ -1,15 +1,9 @@
 var Dat = require('dat-node')
 var encoding = require('dat-encoding')
-// var debug = require('debug')('dat')
-var storage = require('./storage')
 
 module.exports = run
 
 function run (src, dest, opts, cb) {
-  opts = Object.assign({
-    latest: false
-  }, opts)
-
   if (dest) {
     // Downloading
     try {
@@ -19,12 +13,9 @@ function run (src, dest, opts, cb) {
       return cb(new Error('Invalid dat link'))
     }
     src = null
-
-    opts.sparse = true
-    opts.temp= true // use memory for downloads right now
   }
 
-  Dat(storage(src || dest, opts), opts, function (err, dat) {
+  Dat(src || dest, opts, function (err, dat) {
     if (err) return cb(err)
     if (!dat.owner && !dest) {
       return cb(new Error('Not archive owner and no destination provided.'))
